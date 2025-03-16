@@ -57,6 +57,7 @@ export default [
             }
         ]
     },
+
     {
         title: "Voucher Partner",
         sponsors: [
@@ -65,5 +66,5 @@ export default [
                 img : "/sponsor/currentsponsors/interviewbuddy.png",
             }
         ]
-    },
+    }
 ]
