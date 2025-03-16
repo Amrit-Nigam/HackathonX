@@ -53,11 +53,7 @@ footer::before {
   left: 0;
   width: 100%;
   height: 75%;
-<<<<<<< HEAD
   background-image: url('/footer-images/star.svg');
-=======
-  background-image: url('/footer/star.svg');
->>>>>>> 10518f8 (fix: footer import path (#109))
   background-color: #000;
   background-position: center;
   background-size: cover;

@@ -20,6 +20,7 @@
     linear-gradient(to left, #000000 0%, rgba(0, 0, 0, 0) 0%) right;
 }
 
+
 .sponsor::before {
   content: '';
   position: absolute;
