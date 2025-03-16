@@ -2,25 +2,37 @@ import "./about.css";
 
 const About = () => {
   return (
-    <section className="about">
+    <section className="about" id="about">
       <img src="/assets/AboutUsRightStreak.svg" className="AboutUsRightStreak"></img>
       <img src="/assets/AboutUsLeftStreak.svg" className="AboutUsLeftStreak"></img>
 
-        <header className="about-header">
-          <h1 className="about-header-text">ABOUT</h1>
-        </header>
-        <div className="about-content">
-          <p className="about-content-text">
-            <b>Listen up, partner.</b><br />
-            A 24-hour hackin’ showdown is comin’ up, and it ain't for the faint of heart. No screens between ya, no hiding behind a keyboard—this here’s the real deal, face to face.<br /><br />
+      <header className="about-header">
+        <h1 className="about-header-text">ABOUT</h1>
+      </header>
+      <div className="about-content">
+        <p className="about-content-text">
+          <b>Listen up, partner.</b><br />
+          KJSSE CodeCell's 24-hour hackin’ showdown is comin’ up, on the 12th and 13th of April and it ain't for the faint of heart. No screens between ya, no hiding behind a keyboard—this here’s the real deal, face to face.<br /><br />
 
-            Good grub? Check.<br />
-            A place to rest yer boots? Got it.<br />
-            Games, fun, and a heap of prizes? You bet.<br /><br />  
+          Good grub? Check.<br />
+          A place to rest yer boots? Got it.<br />
+          Games, fun, and a heap of prizes? You bet.<br /><br />
 
-            Round up yer crew, put them brains to work, and cook up somethin’ mighty impressive. Ain’t no better time to scheme, dream, and build somethin’ legendary.          
-          </p>
+          Round up yer crew, put them brains to work, and cook up somethin’ mighty impressive. Ain’t no better time to scheme, dream, and build somethin’ legendary.
+        </p>
+        <img src="/assets/about-below-model.svg" className="about-below-model"></img>
+        <div className="model">
+          <model-viewer
+          src="/model/gun-model.glb"
+          alt="Arthur Morgan Hat"
+          auto-rotate
+          disable-zoom
+          camera-controls
+          shadow-intensity="2"
+          style={{ width: "100%", height: "100%" }}
+        ></model-viewer>
         </div>
+      </div>
     </section>
   );
 };
