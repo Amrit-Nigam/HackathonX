@@ -21,7 +21,13 @@ const StatsPage = () => {
     const [showHeader, setShowHeader] = useState(false);
     const [gunRotation, setGunRotation] = useState(0);
 
-    const angleOffset = +45;
+    // Angle offset to compensate for gun's natural tilt
+    const angleOffset = 45; // Adjust as needed
+
+    // Track the previous angle to prevent sudden flips
+    const previousAngleRef = useRef(0);
+    // Track whether initial angle has been set
+    const initialAngleSetRef = useRef(false);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -47,26 +53,62 @@ const StatsPage = () => {
         };
     }, [hasAnimated]);
 
+    // Completely rewritten mouse move handler with stronger anti-flip logic
     useEffect(() => {
+        // Function to normalize angle to within -180 to 180 degrees
+        const normalizeAngle = (angle) => {
+            let a = angle % 360;
+            if (a > 180) a -= 360;
+            if (a < -180) a += 360;
+            return a;
+        };
+
         const handleMouseMove = (e) => {
             if (!centralBadgeRef.current || !gunRef.current || isMobile) return;
 
+            // Get the badge's position relative to the viewport
             const badgeRect = centralBadgeRef.current.getBoundingClientRect();
             const badgeCenterX = badgeRect.left + badgeRect.width / 2;
             const badgeCenterY = badgeRect.top + badgeRect.height / 2;
 
-            const angleRad = Math.atan2(
-                e.clientY - badgeCenterY,
-                e.clientX - badgeCenterX
-            );
+            // Get mouse position relative to badge center
+            const mouseX = e.clientX - badgeCenterX;
+            const mouseY = e.clientY - badgeCenterY;
 
-            const angleDeg = angleRad * (180 / Math.PI) + 90 + angleOffset;
+            // Calculate base angle in degrees
+            const baseAngle = Math.atan2(mouseY, mouseX) * (180 / Math.PI);
 
-            setGunRotation(angleDeg);
+            // Apply offset to get the desired angle
+            const targetAngle = baseAngle + 90 + angleOffset;
+
+            // If this is the first movement, set the initial angle without animation
+            if (!initialAngleSetRef.current) {
+                setGunRotation(targetAngle);
+                previousAngleRef.current = targetAngle;
+                initialAngleSetRef.current = true;
+                return;
+            }
+
+            // Get the current angle
+            const currentAngle = previousAngleRef.current;
+
+            // Calculate the difference, ensuring it's the shortest path
+            const rawDiff = normalizeAngle(targetAngle - currentAngle);
+
+            // Apply the difference to the current angle to get the new angle
+            const newAngle = currentAngle + rawDiff;
+
+            // Store the new angle
+            previousAngleRef.current = newAngle;
+
+            // Update the gun rotation
+            setGunRotation(newAngle);
         };
 
+        // Add mouse move listener
         window.addEventListener("mousemove", handleMouseMove);
 
+        // Clean up
         return () => {
             window.removeEventListener("mousemove", handleMouseMove);
         };
@@ -276,7 +318,7 @@ const StatsPage = () => {
                                         }}
                                     />
                                 ))}
-                                {/* Render gun separately with rotation based on mouse movement */}
+                                {/* Render gun separately with smooth rotation based on mouse movement */}
                                 <motion.div
                                     ref={gunRef}
                                     className="gun-icon"
@@ -285,7 +327,7 @@ const StatsPage = () => {
                                     style={{
                                         transform: `rotate(${gunRotation}deg)`,
                                         transformOrigin: "center",
-                                        transition: "transform 0.1s ease-out",
+                                        transition: "transform 0.15s ease-out",
                                     }}
                                     variants={{
                                         showRings: {
