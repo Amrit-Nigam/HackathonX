@@ -3,300 +3,387 @@ import { motion, useAnimation } from "framer-motion";
 import "./stats.css";
 
 const StatsPage = () => {
-  const [counts, setCounts] = useState({
-    applications: 0,
-    colleges: 0,
-    teams: 0,
-    hackers: 0,
-  });
-  const [isMobile, setIsMobile] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const sectionRef = useRef(null);
-  const controls = useAnimation();
-  const [isInView, setIsInView] = useState(false);
-  const [startRotation, setStartRotation] = useState(false);
-  const [showNumbers, setShowNumbers] = useState(false);
-  const [showHeader, setShowHeader] = useState(false);
+    const [counts, setCounts] = useState({
+        applications: 0,
+        colleges: 0,
+        teams: 0,
+        hackers: 0,
+    });
+    const [isMobile, setIsMobile] = useState(false);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const sectionRef = useRef(null);
+    const gunRef = useRef(null);
+    const centralBadgeRef = useRef(null);
+    const controls = useAnimation();
+    const [isInView, setIsInView] = useState(false);
+    const [startRotation, setStartRotation] = useState(false);
+    const [showNumbers, setShowNumbers] = useState(false);
+    const [showHeader, setShowHeader] = useState(false);
+    const [gunRotation, setGunRotation] = useState(0);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && !hasAnimated) {
-          setIsInView(true);
-          animateSequence();
-          setHasAnimated(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
+    // Angle offset to compensate for gun's natural tilt
+    const angleOffset = 45; // Adjust as needed
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+    // Track the previous angle to prevent sudden flips
+    const previousAngleRef = useRef(0);
+    // Track whether initial angle has been set
+    const initialAngleSetRef = useRef(false);
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, [hasAnimated]);
-
-  const animateSequence = async () => {
-    setShowHeader(true);
-
-    // Start everything almost simultaneously for a more impactful entrance
-    setStartRotation(true);
-    await controls.start("showRings");
-    await controls.start("showConnectors");
-
-    // Reduce delay before showing numbers
-    setTimeout(() => {
-      setShowNumbers(true);
-      startCountAnimation();
-    }, 50); // Reduced from 100
-  };
-
-  const startCountAnimation = () => {
-    const duration = 1000; // Reduced from 1500
-    const interval = 16;
-    const steps = duration / interval;
-    let currentStep = 0;
-
-    const timer = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-
-      const easeOutProgress = 1 - Math.pow(1 - progress, 3);
-
-      setCounts({
-        applications: Math.floor(easeOutProgress * 1700),
-        colleges: Math.floor(easeOutProgress * 100),
-        teams: Math.floor(easeOutProgress * 40),
-        hackers: Math.floor(easeOutProgress * 150),
-      });
-
-      if (currentStep >= steps) {
-        clearInterval(timer);
-        setCounts({
-          applications: 1700,
-          colleges: 100,
-          teams: 40,
-          hackers: 150,
-        });
-      }
-    }, interval);
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 769);
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const numberVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.8, // Reduced from 1.2
-        ease: [0.34, 1.56, 0.64, 1],
-      },
-    },
-  };
-
-  // Header animation variants
-  const headerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.4, // Reduced from 0.6
-        ease: "easeOut",
-      },
-    },
-  };
-
-  return (
-    <section
-      className={`stats ${startRotation ? "start-rotation" : ""}`}
-      ref={sectionRef}
-      id="stats"
-    >
-      <img
-        src="/assets/AboutUsRightStreak.svg"
-        className="AboutUsRightStreak"
-      />
-      <img src="/assets/AboutUsLeftStreak.svg" className="AboutUsLeftStreak" />
-      <div className="stats-container">
-        <motion.header
-          className="title-header"
-          initial="hidden"
-          animate={showHeader ? "visible" : "hidden"}
-          variants={headerVariants}
-        >
-          <h1 className="title-header-text">STATS</h1>
-        </motion.header>
-
-        <div className="stats-grid">
-          {["top-left", "top-right", "bottom-left", "bottom-right"].map(
-            (position) => (
-              <motion.img
-                key={position}
-                src={
-                  isMobile
-                    ? `/assets/${position}-mob.svg`
-                    : `/assets/${position}.svg`
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting && !hasAnimated) {
+                    setIsInView(true);
+                    animateSequence();
+                    setHasAnimated(true);
                 }
-                alt="connector"
-                className={`connector ${position}-connector`}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={controls}
-                variants={{
-                  showConnectors: {
-                    opacity: 1,
-                    scale: 1,
-                    transition: {
-                      duration: 0.8, // Reduced from 1.5
-                      ease: [0.34, 1.56, 0.64, 1],
-                    },
-                  },
-                }}
-              />
-            )
-          )}
+            },
+            { threshold: 0.3 }
+        );
 
-          <motion.div
-            className="stat-row top-row"
-            initial={{ opacity: 0 }}
-            animate={showNumbers ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="stat-box">
-              <div className="stat-value">
-                <div className="icon document-icon"></div>
-                <motion.span
-                  className="stat-number"
-                  initial="hidden"
-                  animate={showNumbers ? "visible" : "hidden"}
-                  variants={numberVariants}
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => {
+            if (sectionRef.current) {
+                observer.unobserve(sectionRef.current);
+            }
+        };
+    }, [hasAnimated]);
+
+    // Completely rewritten mouse move handler with stronger anti-flip logic
+    useEffect(() => {
+        // Function to normalize angle to within -180 to 180 degrees
+        const normalizeAngle = (angle) => {
+            let a = angle % 360;
+            if (a > 180) a -= 360;
+            if (a < -180) a += 360;
+            return a;
+        };
+
+        const handleMouseMove = (e) => {
+            if (!centralBadgeRef.current || !gunRef.current || isMobile) return;
+
+            // Get the badge's position relative to the viewport
+            const badgeRect = centralBadgeRef.current.getBoundingClientRect();
+            const badgeCenterX = badgeRect.left + badgeRect.width / 2;
+            const badgeCenterY = badgeRect.top + badgeRect.height / 2;
+
+            // Get mouse position relative to badge center
+            const mouseX = e.clientX - badgeCenterX;
+            const mouseY = e.clientY - badgeCenterY;
+
+            // Calculate base angle in degrees
+            const baseAngle = Math.atan2(mouseY, mouseX) * (180 / Math.PI);
+
+            // Apply offset to get the desired angle
+            const targetAngle = baseAngle + 90 + angleOffset;
+
+            // If this is the first movement, set the initial angle without animation
+            if (!initialAngleSetRef.current) {
+                setGunRotation(targetAngle);
+                previousAngleRef.current = targetAngle;
+                initialAngleSetRef.current = true;
+                return;
+            }
+
+            // Get the current angle
+            const currentAngle = previousAngleRef.current;
+
+            // Calculate the difference, ensuring it's the shortest path
+            const rawDiff = normalizeAngle(targetAngle - currentAngle);
+
+            // Apply the difference to the current angle to get the new angle
+            const newAngle = currentAngle + rawDiff;
+
+            // Store the new angle
+            previousAngleRef.current = newAngle;
+
+            // Update the gun rotation
+            setGunRotation(newAngle);
+        };
+
+        // Add mouse move listener
+        window.addEventListener("mousemove", handleMouseMove);
+
+        // Clean up
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+        };
+    }, [isMobile, angleOffset]);
+
+    const animateSequence = async () => {
+        setShowHeader(true);
+
+        // Start everything almost simultaneously for a more impactful entrance
+        setStartRotation(true);
+        await controls.start("showRings");
+        await controls.start("showConnectors");
+
+        // Reduce delay before showing numbers
+        setTimeout(() => {
+            setShowNumbers(true);
+            startCountAnimation();
+        }, 50); // Reduced from 100
+    };
+
+    const startCountAnimation = () => {
+        const duration = 1000; // Reduced from 1500
+        const interval = 16;
+        const steps = duration / interval;
+        let currentStep = 0;
+
+        const timer = setInterval(() => {
+            currentStep++;
+            const progress = currentStep / steps;
+
+            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+
+            setCounts({
+                applications: Math.floor(easeOutProgress * 1700),
+                colleges: Math.floor(easeOutProgress * 100),
+                teams: Math.floor(easeOutProgress * 40),
+                hackers: Math.floor(easeOutProgress * 150),
+            });
+
+            if (currentStep >= steps) {
+                clearInterval(timer);
+                setCounts({
+                    applications: 1700,
+                    colleges: 100,
+                    teams: 40,
+                    hackers: 150,
+                });
+            }
+        }, interval);
+    };
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 769);
+        };
+
+        handleResize();
+
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    const numberVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
+        visible: {
+            opacity: 1,
+            scale: 1,
+            transition: {
+                duration: 0.8, // Reduced from 1.2
+                ease: [0.34, 1.56, 0.64, 1],
+            },
+        },
+    };
+
+    // Header animation variants
+    const headerVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.4, // Reduced from 0.6
+                ease: "easeOut",
+            },
+        },
+    };
+
+    return (
+        <section
+            className={`stats ${startRotation ? "start-rotation" : ""}`}
+            ref={sectionRef}
+            id="stats"
+        >
+            <img
+                src="/assets/AboutUsRightStreak.svg"
+                className="AboutUsRightStreak"
+            />
+            <img
+                src="/assets/AboutUsLeftStreak.svg"
+                className="AboutUsLeftStreak"
+            />
+            <div className="stats-container">
+                <motion.header
+                    className="title-header"
+                    initial="hidden"
+                    animate={showHeader ? "visible" : "hidden"}
+                    variants={headerVariants}
                 >
-                  {counts.applications}+
-                </motion.span>
-              </div>
-              <div className="stat-label">APPLICATIONS</div>
-            </div>
+                    <h1 className="title-header-text">STATS</h1>
+                </motion.header>
 
-            <div className="stat-box">
-              <div className="stat-value">
-                <motion.span
-                  className="stat-number"
-                  initial="hidden"
-                  animate={showNumbers ? "visible" : "hidden"}
-                  variants={numberVariants}
-                >
-                  {counts.colleges}+
-                </motion.span>
-                <div className="icon college-icon"></div>
-              </div>
-              <div className="stat-label">COLLEGES</div>
-            </div>
-          </motion.div>
+                <div className="stats-grid">
+                    {[
+                        "top-left",
+                        "top-right",
+                        "bottom-left",
+                        "bottom-right",
+                    ].map((position) => (
+                        <motion.img
+                            key={position}
+                            src={
+                                isMobile
+                                    ? `/assets/${position}-mob.svg`
+                                    : `/assets/${position}.svg`
+                            }
+                            alt="connector"
+                            className={`connector ${position}-connector`}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={controls}
+                            variants={{
+                                showConnectors: {
+                                    opacity: 1,
+                                    scale: 1,
+                                    transition: {
+                                        duration: 0.8, // Reduced from 1.5
+                                        ease: [0.34, 1.56, 0.64, 1],
+                                    },
+                                },
+                            }}
+                        />
+                    ))}
 
-          <div className="central-badge-container">
-            <div className="central-badge">
-              <div className="rotating-gears">
-                {/* Render rings first */}
-                {[
-                  "grey-gear",
-                  "red-circle-outer",
-                  "grey-circle",
-                  "red-gear",
-                  "red-circle-inner",
-                ].map((item, index) => (
-                  <motion.div
-                    key={item}
-                    className={`${item}`}
-                    initial={{ opacity: 0 }}
-                    animate={controls}
-                    variants={{
-                      showRings: {
-                        opacity: 1,
-                        transition: {
-                          delay: index * 0.2, // Reduced from 0.4
-                        },
-                      },
-                    }}
-                  />
-                ))}
-                {/* Render gun separately with longer delay */}
-                <motion.div
-                  className="gun-icon"
-                  initial={{ opacity: 0 }}
-                  animate={controls}
-                  variants={{
-                    showRings: {
-                      opacity: 1,
-                      transition: {
-                        delay: 1, // Reduced from 2
-                        duration: 0.8, // Reduced from 1.2
-                        ease: [0.34, 1.56, 0.64, 1],
-                      },
-                    },
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+                    <motion.div
+                        className="stat-row top-row"
+                        initial={{ opacity: 0 }}
+                        animate={showNumbers ? { opacity: 1 } : {}}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="stat-box">
+                            <div className="stat-value">
+                                <div className="icon document-icon"></div>
+                                <motion.span
+                                    className="stat-number"
+                                    initial="hidden"
+                                    animate={showNumbers ? "visible" : "hidden"}
+                                    variants={numberVariants}
+                                >
+                                    {counts.applications}+
+                                </motion.span>
+                            </div>
+                            <div className="stat-label">APPLICATIONS</div>
+                        </div>
 
-          <motion.div
-            className="stat-row bottom-row"
-            initial={{ opacity: 0 }}
-            animate={showNumbers ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="stat-box">
-              <div className="stat-value">
-                <div className="icon team-icon"></div>
-                <motion.span
-                  className="stat-number"
-                  initial="hidden"
-                  animate={showNumbers ? "visible" : "hidden"}
-                  variants={numberVariants}
-                >
-                  {counts.teams}+
-                </motion.span>
-              </div>
-              <div className="stat-label">TEAMS</div>
-            </div>
+                        <div className="stat-box">
+                            <div className="stat-value">
+                                <motion.span
+                                    className="stat-number"
+                                    initial="hidden"
+                                    animate={showNumbers ? "visible" : "hidden"}
+                                    variants={numberVariants}
+                                >
+                                    {counts.colleges}+
+                                </motion.span>
+                                <div className="icon college-icon"></div>
+                            </div>
+                            <div className="stat-label">COLLEGES</div>
+                        </div>
+                    </motion.div>
 
-            <div className="stat-box">
-              <div className="stat-value">
-                <motion.span
-                  className="stat-number"
-                  initial="hidden"
-                  animate={showNumbers ? "visible" : "hidden"}
-                  variants={numberVariants}
-                >
-                  {counts.hackers}+
-                </motion.span>
-                <div className="icon hacker-icon"></div>
-              </div>
-              <div className="stat-label">HACKERS</div>
+                    <div
+                        className="central-badge-container"
+                        ref={centralBadgeRef}
+                    >
+                        <div className="central-badge">
+                            <div className="rotating-gears">
+                                {/* Render rings first */}
+                                {[
+                                    "grey-gear",
+                                    "red-circle-outer",
+                                    "grey-circle",
+                                    "red-gear",
+                                    "red-circle-inner",
+                                ].map((item, index) => (
+                                    <motion.div
+                                        key={item}
+                                        className={`${item}`}
+                                        initial={{ opacity: 0 }}
+                                        animate={controls}
+                                        variants={{
+                                            showRings: {
+                                                opacity: 1,
+                                                transition: {
+                                                    delay: index * 0.2, // Reduced from 0.4
+                                                },
+                                            },
+                                        }}
+                                    />
+                                ))}
+                                {/* Render gun separately with smooth rotation based on mouse movement */}
+                                <motion.div
+                                    ref={gunRef}
+                                    className="gun-icon"
+                                    initial={{ opacity: 0 }}
+                                    animate={controls}
+                                    style={{
+                                        transform: `rotate(${gunRotation}deg)`,
+                                        transformOrigin: "center",
+                                        transition: "transform 0.15s ease-out",
+                                    }}
+                                    variants={{
+                                        showRings: {
+                                            opacity: 1,
+                                            transition: {
+                                                delay: 1, // Reduced from 2
+                                                duration: 0.8, // Reduced from 1.2
+                                                ease: [0.34, 1.56, 0.64, 1],
+                                            },
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <motion.div
+                        className="stat-row bottom-row"
+                        initial={{ opacity: 0 }}
+                        animate={showNumbers ? { opacity: 1 } : {}}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <div className="stat-box">
+                            <div className="stat-value">
+                                <div className="icon team-icon"></div>
+                                <motion.span
+                                    className="stat-number"
+                                    initial="hidden"
+                                    animate={showNumbers ? "visible" : "hidden"}
+                                    variants={numberVariants}
+                                >
+                                    {counts.teams}+
+                                </motion.span>
+                            </div>
+                            <div className="stat-label">TEAMS</div>
+                        </div>
+
+                        <div className="stat-box">
+                            <div className="stat-value">
+                                <motion.span
+                                    className="stat-number"
+                                    initial="hidden"
+                                    animate={showNumbers ? "visible" : "hidden"}
+                                    variants={numberVariants}
+                                >
+                                    {counts.hackers}+
+                                </motion.span>
+                                <div className="icon hacker-icon"></div>
+                            </div>
+                            <div className="stat-label">HACKERS</div>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
+        </section>
+    );
 };
 
 export default StatsPage;
