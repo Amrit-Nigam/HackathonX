@@ -44,7 +44,6 @@ body.menu-open {
 }
 
 .nav-logo {
-  /* margin-right: 3rem; */
   position: relative;
   top: -0.25rem;
 }
@@ -172,6 +171,21 @@ a:active, a:focus {
   .hamburger {
     display: block;
     z-index: 10001;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .nav-logo {
+    position: relative;
+    top: 0.5rem;
+  }
+
+  .nav-logo img {
+    width: 80px;
+    margin-top: 0;
   }
 
   .nav-links {
@@ -361,10 +375,6 @@ a:active, a:focus {
   /* Rest of your mobile styles */
   .nav-logo {
     margin-right: 0;
-  }
-
-  .nav-logo img {
-    width: 80px;
   }
 
   .hero__nav a {
