@@ -39,8 +39,8 @@ const FAQ = () => {
       },
       {
         question: "What is the Code of Conduct?",
-        answer: (<>The appropriate code of conduct is linked <a href="https://drive.google.com/file/d/1EDjvC7DpBDr_j6EsBHBwd-XgZ6KS4_Hi/view" target="_blank" rel="noopener noreferrer"><here></a>.</>)
-      },
+        answer: (<>The appropriate code of conduct is linked <a href="https://drive.google.com/file/d/1EDjvC7DpBDr_j6EsBHBwd-XgZ6KS4_Hi/view" target="_blank" rel="noopener noreferrer">here</a>.</>)
+      }
   ];
 
   const toggleAccordion = (index) => {
