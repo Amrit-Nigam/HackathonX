@@ -6,6 +6,7 @@ import FlashBack from "./sections/flashback"
 import Prizes from "./sections/prizes"
 import Sponsor from "./sections/sponsor/sponsor"
 import StatsPage from "./sections/stats/stats.jsx"
+import FAQ from "./sections/faq.jsx" // Change to uppercase
 import { clarity } from 'react-microsoft-clarity'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <About />
       <StatsPage/>
       <FlashBack />
+      <FAQ/> 
       <Prizes />
       <Sponsor />
       <Footer />
@@ -24,5 +26,3 @@ function App() {
 }
 
 export default App
-
-
