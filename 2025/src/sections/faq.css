@@ -230,7 +230,7 @@
 .faq-question {
     padding: 1.5rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     cursor: pointer;
     font-size: 1.8rem;
@@ -242,6 +242,12 @@
     width: 100%;
     box-sizing: border-box;
     background: transparent;
+    text-align: center;
+}
+
+.faq-question span {
+    flex: 1;
+    text-align: center;
 }
 
 .faq-question:hover {
@@ -251,40 +257,49 @@
 .faq-answer {
     max-height: 0;
     overflow: hidden;
-    transition: all 0.3s ease-out;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 16px;
     position: relative;
     z-index: 1;
-    background: transparent;
+    background: none;
     width: 100%;
     box-sizing: border-box;
     padding: 0 1.5rem;
+    opacity: 0;
+    transform: translateY(-10px);
 }
 
 .faq-item.active .faq-answer {
     max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: none;
 }
 
 .faq-answer p {
     margin: 0;
     color: #fff;
     line-height: 1.6;
-    background: transparent;
-    font-size: 4rem;
-    margin-bottom: 3rem;
+    background: none;
+    font-size: 2.4rem;
+    margin-bottom: 2rem;
     width: 100%;
     box-sizing: border-box;
+    text-shadow: none;
+    transition: none;
 }
 
 .faq-icon {
-    position: relative;
+    position: absolute;
+    right: 1.5rem;
     width: 0;
     height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 10px solid #fff;
     transition: transform 0.3s ease;
-    margin-left: 10px;
 }
 
 .faq-item.active .faq-icon {
@@ -300,8 +315,8 @@
     .faq-accordion {
         width: calc(100% - 14rem);
     }
-    .faq-answer p {
-        font-size: 3rem; /* Adjust for this breakpoint */
+    .faq-answer {
+        font-size: 2rem;
     }
 }
 
@@ -309,8 +324,8 @@
     .faq-accordion {
         width: calc(100% - 12rem);
     }
-    .faq-answer p {
-        font-size: 2.5rem; /* Adjust for this breakpoint */
+    .faq-answer {
+        font-size: 1.8rem;
     }
 }
 
@@ -333,6 +348,7 @@
     .faq-answer {
         margin-top: 12px;
         padding: 0 1.2rem;
+        font-size: 1.5rem;
     }
     
     .faq-answer p {
@@ -356,6 +372,7 @@
     .faq-answer {
         margin-top: 10px;
         padding: 0 1rem;
+        font-size: 1.2rem;
     }
     
     .faq-answer p {
@@ -427,24 +444,75 @@
     display: block;
     padding: 0;
     box-sizing: border-box;
+    margin-top: 1.5rem;
 }
 
 @media (max-width: 768px) {
+    .faq-item.active .faq-answer {
+        padding-bottom: 2rem;
+    }
+    
     .faq-divider {
-        width: 100%;
-        margin: 0;
-        padding: 0;
+        margin-top: 1rem;
     }
 }
 
 @media (max-width: 480px) {
+    .faq-item.active .faq-answer {
+        padding-bottom: 1.5rem;
+    }
+    
     .faq-divider {
-        width: 100%;
-        margin: 0;
-        padding: 0;
+        margin-top: 0.8rem;
     }
 }
 
 .faq-item.active .faq-question {
     background: transparent !important;
+}
+
+.answer-text {
+    font-size: 1.8rem;
+    color: #ffffff;
+    line-height: 1.5;
+    margin: 0;
+    padding: 1rem;
+    font-weight: 400;
+    background: none;
+    text-align: center;
+}
+
+.answer-text a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+@media (max-width: 1200px) {
+    .answer-text {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 1000px) {
+    .answer-text {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .answer-text {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .answer-text {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 865px) {
+    .answer-text {
+        font-size: 1rem;
+    }
 }
