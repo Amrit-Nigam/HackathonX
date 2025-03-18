@@ -149,21 +149,21 @@ const Navigation = ({ style }) => {
             onMouseEnter={() => handleMouseEnter(3)} 
             onMouseLeave={handleMouseLeave}
           >
-            <a href="#faq" onClick={(e) => handleNavClick(e, '#faq')}>FAQs</a>
+            <a href="#prizes" onClick={(e) => handleNavClick(e, '#prizes')}>Prizes</a>
           </li>
           <li 
             className={hoveredItem === 4 ? 'hovered' : ''}
             onMouseEnter={() => handleMouseEnter(4)} 
             onMouseLeave={handleMouseLeave}
           >
-            <a href="#prizes" onClick={(e) => handleNavClick(e, '#prizes')}>Prizes</a>
+            <a href="#sponsors" onClick={(e) => handleNavClick(e, '#sponsors')}>Sponsors</a>
           </li>
           <li 
             className={hoveredItem === 5 ? 'hovered' : ''}
             onMouseEnter={() => handleMouseEnter(5)} 
             onMouseLeave={handleMouseLeave}
           >
-            <a href="#sponsors" onClick={(e) => handleNavClick(e, '#sponsors')}>Sponsors</a>
+            <a href="#faq" onClick={(e) => handleNavClick(e, '#faq')}>FAQ</a>
           </li>
           <li 
             className={hoveredItem === 6 ? 'hovered' : ''}
@@ -172,7 +172,7 @@ const Navigation = ({ style }) => {
           >
             <a href="#flashbacks" onClick={(e) => handleNavClick(e, '#flashbacks')}>Flashbacks</a>
           </li>
-        </ul>
+        </ul>
 
         <div className="nav-logo-svu">
           <img src="/assets/SVU_LOGO.svg" alt="CodeCell Logo" />

@@ -270,6 +270,7 @@ a:active, a:focus {
   .nav-links.active li:nth-child(4) { animation-delay: 0.45s; }
   .nav-links.active li:nth-child(5) { animation-delay: 0.5s; }
   .nav-links.active li:nth-child(6) { animation-delay: 0.55s; }
+  .nav-links.active li:nth-child(7) { animation-delay: 0.6s; } /* Added delay for Flashbacks item */
 
   @keyframes menuItemAppear {
     0% {
@@ -376,29 +377,21 @@ a:active, a:focus {
     width: 100%;
     transform: skewX(-5deg);
     text-align: center;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
   }
 
   .hero__nav a:active {
     color: #fff !important;
   }
 
-  .hero__nav li.hovered::before {
-    transform: scaleY(0);
+  .hero__nav li.hovered a {
+    color: #fff;
+    transform: translateY(-2px) skewX(-5deg);
+    text-shadow: 0 0 8px #ffff00, 0 0 12px #ffff00, 0 0 16px #ffff00;
+    transition: all 0.3s ease, text-shadow 0.5s ease;
+    will-change: transform, text-shadow;
   }
 
-  .hero__nav li.hovered::after {
-    opacity: 0;
-  }
-
-  .hero__nav li a:hover {
-    color: #000;
-  }
-
-  .nav-logo img:hover {
-    transform: none;
-  }
-  
   .hero__nav li::before,
   .hero__nav li::after {
     display: none;
