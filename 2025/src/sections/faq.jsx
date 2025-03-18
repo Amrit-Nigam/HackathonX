@@ -73,6 +73,7 @@ const FAQ = () => {
               <div className="faq-answer">
                 {item.answer}
               </div>
+              <img src="/sponsor/top-hori.svg" alt="" className="faq-divider" />
             </div>
           ))}
         </div>
