@@ -46,12 +46,19 @@ const Hero = () => {
     const handleScroll = useCallback(() => {
         const position = window.pageYOffset;
         setScrollPosition(position);
-        // Slower parallax effect
-        const backgrounds = document.querySelector(".hero__backgrounds");
-        if (backgrounds) {
-            backgrounds.style.transform = `translateY(${position * 0.3}px)`;
+
+        // Only apply scaling to specific background elements, not to all backgrounds
+        const skyElement = document.querySelector(".hero__background--sky");
+        const groundElement = document.querySelector(".hero__background--ground");
+        const baseElement = document.querySelector(".hero__background--base");
+
+        if (skyElement && groundElement && baseElement) {
+            const scale = 1 + (position * 0.0005);
+            skyElement.style.transform = `translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05}px) scale(${scale})`;
+            groundElement.style.transform = `translate(${mousePosition.x * 0.08}px, ${mousePosition.y * 0.08}px) scale(${scale * 1.1})`;
+            baseElement.style.transform = `scale(${scale})`;
         }
-    }, []);
+    }, [mousePosition]);
 
     useEffect(() => {
         window.addEventListener("mousemove", handleMouseMove);
@@ -68,7 +75,7 @@ const Hero = () => {
             <div
                 className="hero__backgrounds"
                 style={{
-                    transform: `translateY(${scrollPosition * 0.3}px)`,
+                    transform: `translateY(${scrollPosition * 0.3}px)`, // Keep original translateY for overall effect
                 }}
             >
                 <div
@@ -78,8 +85,9 @@ const Hero = () => {
                     data-aos-easing="cubic-bezier(0.34, 1.56, 0.64, 1)"
                     style={{
                         opacity: isLoaded ? 1 : 0,
-                        transition:
-                            "opacity 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                        transition: "opacity 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                        transform: `scale(${1 + scrollPosition * 0.0005})`, // Apply scale directly
+                        transformOrigin: "center center",
                     }}
                 ></div>
                 <img
@@ -87,8 +95,8 @@ const Hero = () => {
                     alt="Sky"
                     className="hero__background hero__background--sky"
                     style={{
-                        transform: `translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05
-                            }px)`,
+                        transform: `translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05}px) scale(${1 + scrollPosition * 0.0005})`,
+                        transformOrigin: "center center",
                     }}
                 />
                 <img
@@ -96,9 +104,8 @@ const Hero = () => {
                     alt="Ground"
                     className="hero__background hero__background--ground"
                     style={{
-                        transform: `translate(${mousePosition.x * 0.08}px, ${mousePosition.y * 0.08 + scrollPosition * 0.4
-                            }px)`,
-                        transformOrigin: "bottom center",
+                        transform: `translate(${mousePosition.x * 0.08}px, ${mousePosition.y * 0.08}px) scale(${1 + scrollPosition * 0.0006})`,
+                        transformOrigin: "center bottom",
                     }}
                     data-aos="slide-up"
                     data-aos-duration="2000"
@@ -106,8 +113,7 @@ const Hero = () => {
                 <div
                     className="hero__background hero__background--horse"
                     style={{
-                        transform: `translate(${mousePosition.x * 0.08}px, ${mousePosition.y * 0.08 + scrollPosition * 0.2
-                            }px)`,
+                        transform: `translate(${mousePosition.x * 0.08}px, ${mousePosition.y * 0.08 + scrollPosition * 0.2}px)`,
                         transformOrigin: "center center",
                     }}
                 ></div>
