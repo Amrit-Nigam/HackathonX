@@ -250,7 +250,7 @@ a:active, a:focus {
   .nav-links li {
     transform: skewY(12deg) translateX(50px);
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem; /* Increased from 0.5rem to add more vertical spacing */
     opacity: 0;
     /* No transitions */
     transition: none;
@@ -270,6 +270,7 @@ a:active, a:focus {
   .nav-links.active li:nth-child(4) { animation-delay: 0.45s; }
   .nav-links.active li:nth-child(5) { animation-delay: 0.5s; }
   .nav-links.active li:nth-child(6) { animation-delay: 0.55s; }
+  .nav-links.active li:nth-child(7) { animation-delay: 0.6s; } /* Added delay for Flashbacks item */
 
   @keyframes menuItemAppear {
     0% {
@@ -300,6 +301,7 @@ a:active, a:focus {
     will-change: opacity, backdrop-filter;
     /* Force hidden initially */
     display: none;
+    margin-top: 10px; /* Added vertical spacing */
   }
 
   .menu-overlay.active {
@@ -311,6 +313,7 @@ a:active, a:focus {
     /* Show when active */
     display: block;
     animation-delay: 0s; /* Ensure overlay starts immediately */
+    padding-top: 15px; /* Added vertical padding for more spacing */
   }
 
   /* Non-active overlay gets hidden animation */
@@ -376,29 +379,21 @@ a:active, a:focus {
     width: 100%;
     transform: skewX(-5deg);
     text-align: center;
-    transition: color 0.2s ease;
+    transition: all 0.3s ease;
   }
 
   .hero__nav a:active {
     color: #fff !important;
   }
 
-  .hero__nav li.hovered::before {
-    transform: scaleY(0);
+  .hero__nav li.hovered a {
+    color: #fff;
+    transform: translateY(-2px) skewX(-5deg);
+    text-shadow: 0 0 8px #ffff00, 0 0 12px #ffff00, 0 0 16px #ffff00;
+    transition: all 0.3s ease, text-shadow 0.5s ease;
+    will-change: transform, text-shadow;
   }
 
-  .hero__nav li.hovered::after {
-    opacity: 0;
-  }
-
-  .hero__nav li a:hover {
-    color: #000;
-  }
-
-  .nav-logo img:hover {
-    transform: none;
-  }
-  
   .hero__nav li::before,
   .hero__nav li::after {
     display: none;
@@ -464,9 +459,10 @@ a:active, a:focus {
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-5px);
+    transform: translateY(-10px); /* Increased from -5px to -10px for more vertical movement */
   }
 }
+
 /* Black and white overlay effect */
 .menu-overlay {
   position: fixed;
@@ -481,6 +477,7 @@ a:active, a:focus {
   transition: opacity 0.4s ease, visibility 0.4s ease;
   backdrop-filter: grayscale(0%);
   pointer-events: none;
+  margin-top: 10px; /* Added vertical spacing */
 }
 
 .menu-overlay.active {
@@ -488,6 +485,7 @@ a:active, a:focus {
   visibility: visible;
   pointer-events: auto;
   animation: fadeToBlackAndWhite 0.5s forwards;
+  padding-top: 15px; /* Added vertical padding for more spacing */
 }
 
 @keyframes fadeToBlackAndWhite {
