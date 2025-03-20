@@ -21,6 +21,7 @@ function App() {
         <FlashBack />
         <Prizes />
         <Sponsor />
+        <FAQ />
         <Footer />
       </div>
   )

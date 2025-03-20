@@ -11,10 +11,10 @@ const FlashBack = () => {
       <img src="/assets/AboutUsLeftStreak.svg" className="AboutUsLeftStreak" />
 
       <header className="flashback-header">
-        <h1 data-aos="fade-down" className="flashback-header-text">FLASHBACK</h1>
+        <h1 data-aos="zoom-out-up" data-aos-duration = "500" className="flashback-header-text">FLASHBACK</h1>
       </header>
 
-      <div data-aos="zoom-in" data-aos-duration="750" data-aos-easing="ease-out-sine" className="flashback-video">
+      <div data-aos="fade-up" data-aos-duration = "500" className="flashback-video">
         <div className="iframe-container">
           <iframe
             src="https://www.youtube.com/embed/MsIwzZziLfs"

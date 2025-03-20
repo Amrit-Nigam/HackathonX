@@ -56,7 +56,7 @@ export default function Sponsor() {
       <div className="sponsor__outer-frame"></div>
       <div className="sponsor__content">
         <div className="sponsor__title-container">
-          <h1 className="sponsor__title title-header-text" data-aos="zoom-out-down" data-aos-duration = "750">SPONSORS</h1>
+          <h1 className="sponsor__title title-header-text" data-aos="zoom-out-up" data-aos-duration = "500">SPONSORS</h1>
         </div>
 
         <div className="sponsor__container">
