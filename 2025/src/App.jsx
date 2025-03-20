@@ -11,15 +11,21 @@ import { clarity } from 'react-microsoft-clarity'
 function App() {
   clarity.init("qodrz4ajhs")
   return (
-    <div className="main-container">
-      <Hero />   
-      <About />
-      <StatsPage/>
-      <FlashBack />
-      <Prizes />
-      <Sponsor />
-      <Footer />
-    </div>
+    <>
+      <div className="main-container">
+        <Hero />   
+        <About />
+        <StatsPage/>
+        <FlashBack />
+        <Prizes />
+        <Sponsor />
+        <Footer />
+      </div>
+      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+      <script>
+        AOS.init();
+      </script>
+    </>
   )
 }
 
