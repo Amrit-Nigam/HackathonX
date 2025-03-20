@@ -7,11 +7,12 @@ import Prizes from "./sections/prizes"
 import Sponsor from "./sections/sponsor/sponsor"
 import StatsPage from "./sections/stats/stats.jsx"
 import { clarity } from 'react-microsoft-clarity'
+import Aos from "aos"
 
 function App() {
   clarity.init("qodrz4ajhs")
+  Aos.init();
   return (
-    <>
       <div className="main-container">
         <Hero />   
         <About />
@@ -21,11 +22,6 @@ function App() {
         <Sponsor />
         <Footer />
       </div>
-      <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-      <script>
-        AOS.init();
-      </script>
-    </>
   )
 }
 

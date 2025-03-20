@@ -7,7 +7,7 @@ const About = () => {
       <img src="/assets/AboutUsLeftStreak.svg" className="AboutUsLeftStreak"></img>
 
       <header className="about-header">
-        <h1 data-aos="fade-up" className="about-header-text">ABOUT</h1>
+        <h1 data-aos="fade-up" data-aos-duration = "750" className="about-header-text">ABOUT</h1>
       </header>
       <div data-aos="fade-down" className="about-content">
         <p className="about-content-text">
@@ -24,7 +24,7 @@ const About = () => {
         <div className="model">
           <model-viewer
           src="/model/gun-model.glb"
-          alt="Arthur Morgan Hat"
+          alt="Gun Model"
           auto-rotate
           disable-zoom
           camera-controls
