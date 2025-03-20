@@ -163,6 +163,13 @@ const Navigation = ({ style }) => {
             onMouseEnter={() => handleMouseEnter(5)} 
             onMouseLeave={handleMouseLeave}
           >
+            <a href="#faq" onClick={(e) => handleNavClick(e, '#faq')}>FAQ</a>
+          </li>
+          <li 
+            className={hoveredItem === 6 ? 'hovered' : ''}
+            onMouseEnter={() => handleMouseEnter(6)} 
+            onMouseLeave={handleMouseLeave}
+          >
             <a href="#flashbacks" onClick={(e) => handleNavClick(e, '#flashbacks')}>Flashbacks</a>
           </li>
         </ul>
