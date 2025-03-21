@@ -53,10 +53,10 @@ const Prizes = () => {
             <img src="/assets/AboutUsRightStreak.svg" className="PrizesRightStreak" />
             <div className="prizes-container">
                 <header className="prizes-header">
-                    <h1 data-aos="zoom-out-up" data-aos-duration = "500">PRIZES</h1>
+                    <h1 data-aos= "fade-down" data-aos-duration = "500">PRIZES</h1>
                 </header>
                 <div className="prizes-grid">
-                    <div className="prize-card" data-aos="fade-right" data-aos-duration = "700">
+                    <div className="prize-card" data-aos="fade-right" data-aos-duration = "700" data-aos-delay = "250">
                         <div className="prize-frame-border prize-frame-border--top"></div>
                         <div className="prize-frame-border prize-frame-border--right"></div>
                         <div className="prize-frame-border prize-frame-border--bottom"></div>
@@ -85,7 +85,7 @@ const Prizes = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="prize-card" data-aos="fade-left" data-aos-duration = "700">
+                    <div className="prize-card" data-aos="fade-left" data-aos-duration = "700" data-aos-delay = "250">
                         <div className="prize-frame-border prize-frame-border--top"></div>
                         <div className="prize-frame-border prize-frame-border--right"></div>
                         <div className="prize-frame-border prize-frame-border--bottom"></div>

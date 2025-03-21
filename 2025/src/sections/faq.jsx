@@ -64,10 +64,10 @@ const FAQ = () => {
         <img src="/assets/AboutUsLeftStreak.svg" className="AboutUsLeftStreak" />
 
         <header className="flashback-header">
-          <h1 className="flashback-header-text">FAQ</h1>
+          <h1 data-aos= "fade-down" data-aos-duration = "500" className="flashback-header-text">FAQ</h1>
         </header>
         
-        <div className="faq-accordion">
+        <div data-aos= "fade-up" data-aos-duration = "500" data-aos-delay = "250" className="faq-accordion">
           {faqData.map((item, index) => (
             <div 
               key={index} 

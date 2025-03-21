@@ -56,10 +56,10 @@ export default function Sponsor() {
       <div className="sponsor__outer-frame"></div>
       <div className="sponsor__content">
         <div className="sponsor__title-container">
-          <h1 className="sponsor__title title-header-text" data-aos="zoom-out-up" data-aos-duration = "500">SPONSORS</h1>
+          <h1 className="sponsor__title title-header-text" data-aos= "fade-down" data-aos-duration = "500">SPONSORS</h1>
         </div>
 
-        <div className="sponsor__container">
+        <div data-aos= "fade-up" data-aos-duration = "500" data-aos-delay = "250" className="sponsor__container">
           <div className="sponsor__button-container">
             <button
               className={`sponsor__button ${activeTab === "current" ? "sponsor__button--active" : ""}`}
