@@ -74,23 +74,22 @@ const Footer = () => {
         <div className="outlaws-image">
           <img src="./footer-images/no_outlaw-cropped.svg" alt="text" />
             <h1><ScrambleText text = "Code The Journey"/></h1>
-
         </div>
       </div>
-      <div className="everything">
+      <div className="everything" data-aos="fade-up" data-aos-once = "true" data-aos-duration = "300">
         <div className="M">
           <img src="./footer-images/MATURE_17.svg" alt="MATURE" />
         </div>
-        <div className="logo">
-          <div className="save-the-date" data-aos="fade-down" data-aos-duration = "500">SAVE THE DATE</div>
-          <div className="april-dates"data-aos="fade-up" data-aos-duration = "500" data-aos-delay = "100">APRIL 12 | 13</div>
+        <div className="logo" >
+          <div className="save-the-date" data-aos="fade-down" data-aos-duration = "500" data-aos-delay = "300">SAVE THE DATE</div>
+          <div className="april-dates"data-aos="fade-up" data-aos-duration = "500" data-aos-delay = "450">APRIL 12 | 13</div>
 
           <div
             className="apply-button"
             data-hackathon-slug="gajshield-kjsse-hack8"
             data-button-theme="dark-inverted"
           ></div>
-          <div className="social-icons">
+          <div className="social-icons" data-aos = "zoom-up" data-aos-duration = "500" data-aos-delay = "300">
             <a href="https://www.facebook.com/kjscecodecell/" target="_blank" rel="noopener noreferrer">
               <img src="./footer-images/facebook.svg" alt="Facebook" style={{ width: '30px', height: '30px' }} />
             </a>
@@ -107,7 +106,10 @@ const Footer = () => {
               <img src="./footer-images/linkedin.svg" alt="LinkedIn" style={{ width: '30px', height: '30px' }} />
             </a>
           </div>
-          <p>Made with <span>🤍</span> by <a href="https://www.kjssecodecell.com/" target="_blank" rel="noopener noreferrer">KJSSE CodeCell</a> </p>
+          <div >
+            <p>Made with <span>🤍</span> by <a href="https://www.kjssecodecell.com/" target="_blank" rel="noopener noreferrer">KJSSE CodeCell</a></p>
+          </div>
+
         </div>
         <div className="G">
           <img src="./footer-images/MATURE_17.svg" alt="MATURE" />
