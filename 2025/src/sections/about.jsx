@@ -7,9 +7,9 @@ const About = () => {
       <img src="/assets/AboutUsLeftStreak.svg" className="AboutUsLeftStreak"></img>
 
       <header className="about-header">
-        <h1 className="about-header-text">ABOUT</h1>
+        <h1 data-aos="fade-down" data-aos-duration = "500" className="about-header-text">ABOUT</h1>
       </header>
-      <div className="about-content">
+      <div data-aos="fade-up" data-aos-delay = "500" data-aos-duration = "250" className="about-content">
         <p className="about-content-text">
           <b>Listen up, partner.</b><br />
           KJSSE CodeCell's 24-hour hackin’ showdown is comin’ up, on the 12th and 13th of April and it ain't for the faint of heart. No screens between ya, no hiding behind a keyboard—this here’s the real deal, face to face.<br /><br />
@@ -24,7 +24,7 @@ const About = () => {
         <div className="model">
           <model-viewer
           src="/model/gun-model.glb"
-          alt="Arthur Morgan Hat"
+          alt="Gun Model"
           auto-rotate
           disable-zoom
           camera-controls
