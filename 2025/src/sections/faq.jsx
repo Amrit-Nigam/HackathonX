@@ -6,11 +6,9 @@ const FAQ = () => {
 
   const faqData = [
     {
-
       question: "What are the 2 Problem Statements?",
       answer: (<div className="answer-text">The hackathon will have two tracks: GajShield Track and Mystery Track. Teams in the GajShield Track will receive their problem statement 3-4 days prior and can start working early, but a twist will be introduced on the competition day. <br />Meanwhile, teams in the Mystery Track will receive their problem statement on the day of the competition.</div>)
     },
-
     {
       question: "How will the problem statements be, and how will the tracks be decided?",
       answer: (<div className="answer-text">The problem statements will be provided by the organizers. The tracks will be allotted to the teams by the organizers based on profile and resume fit.</div>)
