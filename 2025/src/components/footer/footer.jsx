@@ -1,5 +1,61 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './footer.css';
+
+const ScrambleText = ({ text }) => {
+  const [scrambledText, setScrambledText] = useState(text);
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+  const scramble = useCallback(() => {
+      let iterations = 0;
+      const maxIterations = 10;
+      const interval = setInterval(() => {
+          setScrambledText(prev =>
+              text.split('').map((char, index) => {
+                  if (char === " ") return " ";
+                  if (iterations > index) return char;
+                  return characters[Math.floor(Math.random() * characters.length)];
+              }).join("")
+          );
+
+          iterations += 1 / 3;
+          if (iterations >= maxIterations) {
+              clearInterval(interval);
+              setScrambledText(text);
+          }
+      }, 30);
+
+      return () => clearInterval(interval);
+  }, [text, characters]);
+
+  useEffect(() => {
+      const observer = new IntersectionObserver(
+          ([entry]) => {
+              setIsVisible(entry.isIntersecting);
+          },
+          { threshold: 0.1 }
+      );
+
+      if (ref.current) observer.observe(ref.current);
+
+      return () => {
+          if (ref.current) observer.unobserve(ref.current);
+      };
+  }, []);
+
+  useEffect(() => {
+      if (isVisible) {
+          scramble();
+      }
+  }, [isVisible, scramble]);
+
+  return (
+      <span ref={ref} className="scramble-text">
+          {scrambledText}
+      </span>
+  );
+};
 
 const Footer = () => {
   useEffect(() => {
@@ -17,7 +73,8 @@ const Footer = () => {
       <div className="outlaws">
         <div className="outlaws-image">
           <img src="./footer-images/no_outlaw-cropped.svg" alt="text" />
-          <h1>Code The Journey</h1>
+            <h1><ScrambleText text = "Code The Journey"/></h1>
+
         </div>
       </div>
       <div className="everything">
@@ -25,8 +82,8 @@ const Footer = () => {
           <img src="./footer-images/MATURE_17.svg" alt="MATURE" />
         </div>
         <div className="logo">
-          <div className="save-the-date">SAVE THE DATE</div>
-          <div className="april-dates">APRIL 12 | 13</div>
+          <div className="save-the-date" data-aos="fade-down" data-aos-duration = "500">SAVE THE DATE</div>
+          <div className="april-dates"data-aos="fade-up" data-aos-duration = "500" data-aos-delay = "100">APRIL 12 | 13</div>
 
           <div
             className="apply-button"
