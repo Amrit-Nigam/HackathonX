@@ -8,21 +8,23 @@ import Sponsor from "./sections/sponsor/sponsor"
 import StatsPage from "./sections/stats/stats.jsx"
 import FAQ from "./sections/faq.jsx" // Change to uppercase
 import { clarity } from 'react-microsoft-clarity'
+import Aos from "aos"
 
 function App() {
   clarity.init("qodrz4ajhs")
+  Aos.init();
   return (
-    <div className="main-container">
-      <Hero />   
-      <About />
-      <StatsPage/>
-      <FlashBack />
-      <FAQ/> 
-      <Prizes />
-      <Sponsor />
-      <Footer />
-    </div>
+      <div className="main-container">
+        <Hero />   
+        <About />
+        <StatsPage/>
+        <FlashBack />
+        <Prizes />
+        <Sponsor />
+        <FAQ />
+        <Footer />
+      </div>
   )
 }
 
-export default App
+export default App;
