@@ -16,6 +16,7 @@ export default function Sponsor() {
                 src={item.img}
                 alt="Sponsor Logo"
                 className="sponsor__logo-placeholder"
+                style={item.style}
               />
             </a>
           </div>

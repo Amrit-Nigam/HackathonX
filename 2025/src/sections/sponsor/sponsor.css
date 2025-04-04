@@ -340,12 +340,12 @@
 }
 
 .sponsor__logo-placeholder {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   object-fit: contain;
   background-color: transparent;
   border: none;
-  padding: 10px;
+  
 }
 
 .sponsor__p {
@@ -536,8 +536,8 @@
   }
 
   .sponsor__logo-placeholder {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
   }
 
   .sponsor__frame-text {
@@ -624,8 +624,8 @@
   }
 
   .sponsor__logo-placeholder {
-    width: 110px;
-    height: 110px;
+    width: 130px;
+    height: 130px;
   }
 
   .sponsor__button {
@@ -704,12 +704,12 @@
 }
 
 .sponsor__logo-placeholder {
-  width: 200px;
-  height: 200px;
+  width: 250px;
+  height: 250px;
   object-fit: contain;
   background-color: transparent;
   border: none;
-  padding: 10px;
+  
 }
 
 @media (max-width: 768px) {
