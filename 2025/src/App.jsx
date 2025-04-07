@@ -8,6 +8,7 @@ import Sponsor from "./sections/sponsor/sponsor";
 import StatsPage from "./sections/stats/stats.jsx";
 import FAQ from "./sections/faq.jsx"; // Change to uppercase
 import { clarity } from "react-microsoft-clarity";
+import Timeline from "./sections/timeline/timeline.jsx";
 
 function App() {
     clarity.init("qodrz4ajhs");
@@ -15,6 +16,7 @@ function App() {
         <div className="main-container">
             <Hero />
             <About />
+            <Timeline/>
             <StatsPage />
             <FlashBack />
             <Prizes />
