@@ -27,14 +27,6 @@
     overflow-x: hidden;
 }
 
-.AboutUsRightStreak,
-.AboutUsLeftStreak {
-    position: absolute;
-    max-width: 100%;
-    height: auto;
-    pointer-events: none;
-}
-
 .timeline-container {
     background-size: cover;
     width: 100%;
@@ -85,11 +77,14 @@
     max-width: 1200px;
     width: 90%;
     margin: 0 auto;
+    overflow: visible; /* Allow circles to be visible outside container */
 }
 
 /* Day Styles */
 .day {
     margin-bottom: 50px;
+    position: relative;
+    padding-bottom: 30px;
 }
 
 .day h2 {
@@ -113,7 +108,9 @@
         rgba(255, 150, 50, 0.7)
     );
     top: 80px;
-    bottom: 0;
+    height: calc(
+        100% - 80px - 30px
+    ); /* Subtract top position and bottom margin */
     left: 50%;
     margin-left: -3px;
     border-radius: 3px;
@@ -222,10 +219,29 @@
     left: -49px;
 }
 
+/* Medium Laptop */
+@media screen and (max-width: 1024px) {
+    .timeline-item {
+        width: 40%;
+    }
+    .timeline-item.left {
+        left: 10%;
+    }
+    .title-header {
+        font-size: 3rem;
+    }
+    .timeline-item-content p {
+        font-size: 1.4rem;
+    }
+}
+
 /* Mobile responsive styles */
 @media screen and (max-width: 768px) {
     .day::after {
         left: 31px;
+        height: calc(
+            100% - 80px - 20px
+        ); /* Slightly less space at bottom for mobile */
     }
 
     .timeline-item {
@@ -265,23 +281,51 @@
 
 /* Smaller screens */
 @media screen and (max-width: 480px) {
+    .timeline-content {
+        font-size: 1rem;
+    }
+
+    /* Reduce title size */
+    .title-header {
+        font-size: 2.5rem;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Reduce time font size */
+    .time {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    /* Reduce description text size */
+    .timeline-item-content p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    /* Adjust day header */
+    .day h2 {
+        font-size: 1.8rem;
+        text-align: center;
+        padding-left: 40px;
+    }
+
+    /* Other mobile adjustments */
+    .day::after {
+        left: 17px;
+        height: calc(100% - 80px - 10px);
+    }
+
     .timeline-item.right,
     .timeline-item.left {
         left: -1rem;
     }
 
-    .title-header {
-        font-size: 2.5rem;
-    }
-
-    .day h2 {
-        font-size: 2rem;
-        text-align: left;
-        padding-left: 70px;
-    }
-
     .timeline-item {
-        padding-left: 60px;
+        padding-left: 50px;
+        padding-right: 10px;
+        margin-bottom: 20px;
     }
 
     .circle {
@@ -294,7 +338,33 @@
         left: 0px;
     }
 
-    .day::after {
-        left: 17px;
+    /* Reduce padding in content boxes */
+    .timeline-item-content {
+        padding: 15px;
     }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 360px) {
+    .time {
+        font-size: 1rem;
+    }
+
+    .timeline-item-content p {
+        font-size: 0.9rem;
+    }
+
+    .day h2 {
+        font-size: 1.5rem;
+        padding-left: 35px;
+    }
+
+    .title-header {
+        font-size: 2rem;
+    }
+}
+
+/* Make sure the last timeline item doesn't have excess bottom margin */
+.timeline-item:last-child {
+    margin-bottom: 10px;
 }
