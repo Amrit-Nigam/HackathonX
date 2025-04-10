@@ -7,6 +7,7 @@ import Prizes from "./sections/prizes"
 import Sponsor from "./sections/sponsor/sponsor"
 import StatsPage from "./sections/stats/stats.jsx"
 import FAQ from "./sections/faq.jsx" // Change to uppercase
+import Timeline from "./sections/timeline/timeline.jsx";
 import { clarity } from 'react-microsoft-clarity'
 import Aos from "aos"
 
@@ -17,6 +18,7 @@ function App() {
       <div className="main-container">
         <Hero />   
         <About />
+        <Timeline/>
         <StatsPage/>
         <FlashBack />
         <Prizes />
