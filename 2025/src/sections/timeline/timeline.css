@@ -1,0 +1,370 @@
+/* Add these styles at the top of your file */
+.timelineBody {
+    position: relative;
+    color: #fff;
+    width: 100%;
+    overflow-x: hidden; /* Ensure horizontal overflow is hidden */
+    background: linear-gradient(to bottom, #000000 0%, rgba(0, 0, 0, 0) 35%) top,
+        linear-gradient(to top, #000000 0%, rgba(0, 0, 0, 0) 25%) bottom,
+        linear-gradient(to right, #000000 0%, rgba(0, 0, 0, 0) 0%) left,
+        linear-gradient(to left, #000000 0%, rgba(0, 0, 0, 0) 0%) right,
+        url("/assets/timelinebg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.timeline-container {
+    width: 100%;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+    padding-bottom: 60px;
+    overflow-x: hidden;
+}
+
+.timeline-container {
+    background-size: cover;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 60px;
+}
+
+.timeline-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.timeline-container > * {
+    position: relative;
+    z-index: 2;
+}
+
+.title-header {
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    font-size: 4rem;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+    opacity: 1;
+}
+
+.title-header-text {
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+/* Timeline Content Styles */
+.timeline-content {
+    position: relative;
+    max-width: 1200px;
+    width: 90%;
+    margin: 0 auto;
+    overflow: visible; /* Allow circles to be visible outside container */
+}
+
+/* Day Styles */
+.day {
+    margin-bottom: 50px;
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.day h2 {
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 30px;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 100, 100, 0.7);
+    letter-spacing: 1px;
+    position: relative;
+}
+
+/* Timeline central line */
+.day::after {
+    content: "";
+    position: absolute;
+    width: 6px;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 50, 50, 0.7),
+        rgba(255, 150, 50, 0.7)
+    );
+    top: 80px;
+    height: calc(
+        100% - 80px - 30px
+    ); /* Subtract top position and bottom margin */
+    left: 50%;
+    margin-left: -3px;
+    border-radius: 3px;
+    box-shadow: 0 0 15px rgba(255, 100, 100, 0.5);
+    z-index: 1;
+}
+
+/* Timeline items (events) */
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    width: 50%;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+/* Left side events */
+.timeline-item.left {
+    left: 0;
+}
+
+/* Right side events */
+.timeline-item.right {
+    left: 50%;
+}
+
+/* Content boxes for each event */
+.timeline-item-content {
+    padding: 20px;
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(8px);
+    position: relative;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 100, 100, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 10;
+}
+
+.timeline-item-content:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Arrow for left items */
+.timeline-item.left .timeline-item-content::after {
+    content: "";
+    position: absolute;
+    top: 22px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    background: inherit;
+    border-right: 1px solid rgba(255, 100, 100, 0.3);
+    border-top: 1px solid rgba(255, 100, 100, 0.3);
+    transform: rotate(45deg);
+}
+
+/* Arrow for right items */
+.timeline-item.right .timeline-item-content::after {
+    content: "";
+    position: absolute;
+    top: 22px;
+    left: -10px;
+    width: 20px;
+    height: 20px;
+    background: inherit;
+    border-left: 1px solid rgba(255, 100, 100, 0.3);
+    border-bottom: 1px solid rgba(255, 100, 100, 0.3);
+    transform: rotate(45deg);
+}
+
+/* Time display */
+.time {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Timeline item text */
+.timeline-item-content p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 1.5rem;
+}
+
+/* Circle markers */
+.circle {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background-color: #ff3030;
+    border-radius: 50%;
+    top: 25px;
+    box-shadow: 0 0 10px rgba(255, 100, 100, 0.8);
+    z-index: 100;
+}
+
+.timeline-item.left .circle {
+    right: -49px;
+}
+
+.timeline-item.right .circle {
+    left: -49px;
+}
+
+/* Medium Laptop */
+@media screen and (max-width: 1024px) {
+    .timeline-item {
+        width: 40%;
+    }
+    .timeline-item.left {
+        left: 10%;
+    }
+    .title-header {
+        font-size: 3rem;
+    }
+    .timeline-item-content p {
+        font-size: 1.4rem;
+    }
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 768px) {
+    .day::after {
+        left: 31px;
+        height: calc(
+            100% - 80px - 20px
+        ); /* Slightly less space at bottom for mobile */
+    }
+
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+    }
+    .circle {
+        width: 12px;
+        height: 12px;
+    }
+
+    .timeline-item.right,
+    .timeline-item.left {
+        left: 0;
+    }
+
+    .timeline-item.left .circle {
+        left: 0px;
+        right: auto;
+    }
+
+    .timeline-item.right .circle {
+        left: 0px;
+    }
+
+    .timeline-item.left .timeline-item-content::after,
+    .timeline-item.right .timeline-item-content::after {
+        left: -10px;
+        border-right: none;
+        border-top: none;
+        border-left: 1px solid rgba(255, 100, 100, 0.3);
+        border-bottom: 1px solid rgba(255, 100, 100, 0.3);
+        transform: rotate(45deg);
+    }
+}
+
+/* Smaller screens */
+@media screen and (max-width: 480px) {
+    .timeline-content {
+        font-size: 1rem;
+    }
+
+    /* Reduce title size */
+    .title-header {
+        font-size: 2.5rem;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Reduce time font size */
+    .time {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+
+    /* Reduce description text size */
+    .timeline-item-content p {
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+
+    /* Adjust day header */
+    .day h2 {
+        font-size: 1.8rem;
+        text-align: center;
+        padding-left: 40px;
+    }
+
+    /* Other mobile adjustments */
+    .day::after {
+        left: 17px;
+        height: calc(100% - 80px - 10px);
+    }
+
+    .timeline-item.right,
+    .timeline-item.left {
+        left: -1rem;
+    }
+
+    .timeline-item {
+        padding-left: 50px;
+        padding-right: 10px;
+        margin-bottom: 20px;
+    }
+
+    .circle {
+        width: 10px;
+        height: 10px;
+    }
+
+    .timeline-item.left .circle,
+    .timeline-item.right .circle {
+        left: 0px;
+    }
+
+    /* Reduce padding in content boxes */
+    .timeline-item-content {
+        padding: 15px;
+    }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 360px) {
+    .time {
+        font-size: 1rem;
+    }
+
+    .timeline-item-content p {
+        font-size: 0.9rem;
+    }
+
+    .day h2 {
+        font-size: 1.5rem;
+        padding-left: 35px;
+    }
+
+    .title-header {
+        font-size: 2rem;
+    }
+}
+
+/* Make sure the last timeline item doesn't have excess bottom margin */
+.timeline-item:last-child {
+    margin-bottom: 10px;
+}
