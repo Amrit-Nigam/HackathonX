@@ -4,7 +4,7 @@ export default [
         sponsors: [
             {
                 src: "https://www.gajshield.com/",
-                img: "/sponsor/currentsponsors/GajshieldWhite.png"
+                img: "/sponsor/currentsponsors/gajshield.png"
             }
         ]
     },
