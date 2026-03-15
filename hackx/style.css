@@ -1575,3 +1575,12 @@ body {
     font-size: 8px;
   }
 }
+
+/* ===== MUSIC COLOR OSCILLATION ===== */
+html.theme-oscillating {
+  transition: filter 0.35s ease;
+}
+
+html.theme-blue {
+  filter: hue-rotate(-108deg);
+}
