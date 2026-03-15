@@ -883,6 +883,14 @@ body {
   flex-wrap: wrap;
 }
 
+.sponsor-logos.gold-tier,
+.sponsor-logos.community-tier {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
 .sponsor-slot {
   border: 1px dashed #FF174425;
   padding: 30px 40px;
@@ -892,6 +900,24 @@ body {
   text-align: center;
   min-width: 200px;
   transition: border-color 0.3s ease;
+}
+
+.sponsor-slot img {
+  max-height: 48px;
+  max-width: 180px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.sponsor-slot.small img {
+  max-height: 30px;
+  max-width: 90px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: inline-block;
 }
 
 .sponsor-slot:hover {
@@ -904,8 +930,41 @@ body {
   min-width: 300px;
   border-color: var(--gold);
   color: var(--gold);
-  opacity: 0.5;
+  opacity: 1;
 }
+
+.title-tier .sponsor-slot img {
+  /* Custom styles for title-tier sponsor images can be added here if needed */
+}
+
+.gajshield-zoom {
+  transform: scale(1.7);
+  max-height: 70px !important;
+  max-width: 220px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  filter: brightness(1.25) drop-shadow(0 0 8px #FFD60088);
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.incred-zoom {
+  transform: scale(1.15) translateY(5px);
+  max-height: 55px !important;
+  max-width: 180px !important;
+  object-fit: contain !important;
+  display: inline-block;
+}
+
+.blacksimba-zoom {
+  transform: scale(1.25);
+  max-height: 38px !important;
+  max-width: 112px !important;
+  object-fit: contain !important;
+  display: inline-block;
+}
+
 
 .sponsor-slot.small {
   padding: 20px 24px;
@@ -969,6 +1028,21 @@ body {
 
 .past-sponsors-marquee span:hover {
   color: #FF174470;
+}
+
+.past-sponsors-marquee img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  opacity: 1;
+  filter: none;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  flex-shrink: 0;
+}
+
+.past-sponsors-marquee img:hover {
+  opacity: 0.85;
+  filter: brightness(1.1);
 }
 
 /* ===== FOOTER ===== */
