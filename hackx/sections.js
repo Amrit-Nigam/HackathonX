@@ -1359,65 +1359,91 @@
 
   // ===== TEAM MARQUEE =====
   function initTeamGrid() {
+    const defaultAvatar = 'images/icon.png';
+
     const heads = [
-      { name: 'AMANDEEP SINGH', role: 'COMMITTEE HEAD', dept: 'COMPS/TY' },
-      { name: 'VIRAJ BHARTIYA', role: 'COMMITTEE HEAD', dept: 'COMPS/TY' },
-      { name: 'OMIK ACHARYA', role: 'TECH HEAD', dept: 'COMPS/TY' },
-      { name: 'ADITI SINGH', role: 'CREATIVE HEAD', dept: 'COMPS/TY' },
-      { name: 'RISHI SHANBHAG', role: 'MARKETING HEAD', dept: 'COMPS/TY' },
+      { name: 'AMANDEEP SINGH', role: 'COMMITTEE HEAD', dept: 'COMPS/TY', photo: 'images/team/Amandeep_2025-2026.png',profile: '#' },
+      { name: 'VIRAJ BHARTIYA', role: 'COMMITTEE HEAD', dept: 'COMPS/TY', photo: 'images/team/Viraj_2025-2026.png', profile: '#' },
+      { name: 'OMIK ACHARYA', role: 'TECH HEAD', dept: 'COMPS/TY', photo: 'images/team/Omik_2025-2026.png', profile: '#' },
+      { name: 'ADITI SINGH', role: 'CREATIVE HEAD', dept: 'COMPS/TY', photo: 'images/team/Aditi_2025-2026.png', profile: '#' },
+      { name: 'RISHI SHANBHAG', role: 'MARKETING HEAD', dept: 'COMPS/TY', photo: 'images/team/Rishi_2025-2026.png', profile: '#' },
     ];
 
     const ty = [
-      { name: 'ADITYA BELGAONKAR', role: 'TECH', dept: 'COMPS/TY' },
-      { name: 'KUMAR TANAY', role: 'TECH', dept: 'COMPS/TY' },
-      { name: 'VIVEK JAIN', role: 'TECH', dept: 'COMPS/TY' },
-      { name: 'AKANKSHA AGROYA', role: 'CREATIVE', dept: 'COMPS/TY' },
-      { name: 'AMRIT NIGAM', role: 'CREATIVE', dept: 'COMPS/TY' },
-      { name: 'CHAITANYA DHAMDHERE', role: 'MARKETING', dept: 'COMPS/TY' },
-      { name: 'DHARMIK CHANDEL', role: 'MARKETING', dept: 'IT/TY' },
-      { name: 'SHREYANS TATIYA', role: 'MARKETING', dept: 'COMPS/TY' },
+      { name: 'ADITYA BELGAONKAR', role: 'TECH', dept: 'COMPS/TY', photo: 'images/team/Aditya_2025-2026.png', profile: '#' },
+      { name: 'KUMAR TANAY', role: 'TECH', dept: 'COMPS/TY', photo: 'images/team/Kumar_2025-2026.png', profile: '#' },
+      { name: 'VIVEK JAIN', role: 'TECH', dept: 'COMPS/TY', photo: 'images/team/Vivek_2025-2026.png', profile: '#' },
+      { name: 'AKANKSHA AGROYA', role: 'CREATIVE', dept: 'COMPS/TY', photo: 'images/team/Akanksha_2025-2026.png', profile: '#' },
+      { name: 'AMRIT NIGAM', role: 'CREATIVE', dept: 'COMPS/TY', photo: 'images/team/Amrit_2025-2026.png', profile: '#' },
+      { name: 'CHAITANYA DHAMDHERE', role: 'MARKETING', dept: 'COMPS/TY', photo: 'images/team/Chaitanya_2025-2026.png', profile: '#' },
+      { name: 'DHARMIK CHANDEL', role: 'MARKETING', dept: 'IT/TY', photo: 'images/team/Dharmik_2025-2026.png', profile: '#' },
+      { name: 'SHREYANS TATIYA', role: 'MARKETING', dept: 'COMPS/TY', photo: 'images/team/Shreyans_2025-2026.png', profile: '#' },
     ];
 
     const sy = [
-      { name: 'ANMOL RAI', role: 'TECH', dept: 'COMPS/SY' },
-      { name: 'ASHWERA HASAN', role: 'TECH', dept: 'COMPS/SY' },
-      { name: 'SAMAGRA AGARWAL', role: 'TECH', dept: 'COMPS/SY' },
-      { name: 'SHANTANAV MUKHERJEE', role: 'TECH', dept: 'COMPS/SY' },
-      { name: 'TANUJ ADARKAR', role: 'TECH', dept: 'COMPS/SY' },
-      { name: 'VINAYAK PAI', role: 'TECH', dept: 'COMPS/SY' },
-      { name: 'AMEYA DEORE', role: 'CREATIVE', dept: 'CSBS/SY' },
-      { name: 'PURVA POTE', role: 'CREATIVE', dept: 'CSBS/SY' },
-      { name: 'DIVYANSHI YADAV', role: 'CREATIVE', dept: 'COMPS/SY' },
-      { name: 'DHANYA SHUKLA', role: 'CREATIVE', dept: 'COMPS/SY' },
-      { name: 'ARSHIA DANG', role: 'MARKETING', dept: 'IT/SY' },
-      { name: 'PARTH PANWAR', role: 'MARKETING', dept: 'AIDS/SY' },
-      { name: 'HARSHIL RAVARIYA', role: 'MARKETING', dept: 'AIDS/SY' },
-      { name: 'SAMAIRA SHARMA', role: 'MARKETING', dept: 'IT/SY' },
-      { name: 'SHRAVIKA MHATRE', role: 'MARKETING', dept: 'VLSI/SY' },
-      { name: 'SRUSHTI TALANDAGE', role: 'MARKETING', dept: 'CSBS/SY' },
+      { name: 'ANMOL RAI', role: 'TECH', dept: 'COMPS/SY', photo: 'images/team/Anmol_2025-2026.png', profile: '#' },
+      { name: 'ASHWERA HASAN', role: 'TECH', dept: 'COMPS/SY', photo: 'images/team/Ashwera_2025-2026.png', profile: '#' },
+      { name: 'SAMAGRA AGARWAL', role: 'TECH', dept: 'COMPS/SY', photo: 'images/team/Samagra_2025-2026.png', profile: '#' },
+      { name: 'SHANTANAV MUKHERJEE', role: 'TECH', dept: 'COMPS/SY', photo: 'images/team/Shantanav_2025-2026.png', profile: '#' },
+      { name: 'TANUJ ADARKAR', role: 'TECH', dept: 'COMPS/SY', photo: 'images/team/Tanuj_2025-2026.png', profile: '#' },
+      { name: 'VINAYAK PAI', role: 'TECH', dept: 'COMPS/SY', photo: 'images/team/Vinayak_2025-2026.png', profile: '#' },
+      { name: 'AMEYA DEORE', role: 'CREATIVE', dept: 'CSBS/SY', photo: 'images/team/Ameya_2025-2026.png', profile: '#' },
+      { name: 'PURVA POTE', role: 'CREATIVE', dept: 'CSBS/SY', photo: 'images/team/Purva_2025-2026.png', profile: '#' },
+      { name: 'DIVYANSHI YADAV', role: 'CREATIVE', dept: 'COMPS/SY', photo: 'images/team/Divyanshi_2025-2026.png', profile: '#' },
+      { name: 'DHANYA SHUKLA', role: 'CREATIVE', dept: 'COMPS/SY', photo: 'images/team/Dhanya_2025-2026.png', profile: '#' },
+      { name: 'ARSHIA DANG', role: 'MARKETING', dept: 'IT/SY', photo: 'images/team/Arshia_2025-2026.png', profile: '#' },
+      { name: 'PARTH PANWAR', role: 'MARKETING', dept: 'AIDS/SY', photo: 'images/team/Parth_2025-2026.png', profile: '#' },
+      { name: 'HARSHIL RAVARIYA', role: 'MARKETING', dept: 'AIDS/SY', photo: 'images/team/Harshil_2025-2026.png', profile: '#' },
+      { name: 'SAMAIRA SHARMA', role: 'MARKETING', dept: 'IT/SY', photo: 'images/team/Samaira_2025-2026.png', profile: '#' },
+      { name: 'SHRAVIKA MHATRE', role: 'MARKETING', dept: 'VLSI/SY', photo:'images/team/Shravika_2025-2026.png', profile: '#' },
+      { name: 'SRUSHTI TALANDAGE', role: 'MARKETING', dept:'CSBS/SY', photo: 'images/team/Srushti_2025-2026.png', profile: '#' },
     ];
 
     const fy = [
-      { name: 'BHOUMIK SANGLE', role: 'TECH', dept: 'COMPS/FY' },
-      { name: 'DHRUV KUMAR', role: 'TECH', dept: 'COMPS/FY' },
-      { name: 'PRANAV MENDON', role: 'TECH', dept: 'COMPS/FY' },
-      { name: 'ANCHITA SAHU', role: 'CREATIVE', dept: 'IT/FY' },
-      { name: 'MITALI PAUL', role: 'CREATIVE', dept: 'COMPS/FY' },
-      { name: 'RUDRAKSHI ACHARYYA', role: 'MARKETING', dept: 'COMPS/FY' },
-      { name: 'YASH AGROYA', role: 'MARKETING', dept: 'IT/FY' },
+      { name: 'BHOUMIK SANGLE', role: 'TECH', dept: 'COMPS/FY', photo: 'images/team/Bhoumik_2025-2026.png', profile: '#' },
+      { name: 'DHRUV KUMAR', role: 'TECH', dept: 'COMPS/FY', photo: 'images/team/Dhruv_2025-2026.png', profile: '#' },
+      { name: 'PRANAV MENDON', role: 'TECH', dept: 'COMPS/FY', photo: 'images/team/Pranav_2025-2026.png', profile: '#' },
+      { name: 'ANCHITA SAHU', role: 'CREATIVE', dept: 'IT/FY', photo: 'images/team/Anchita_2025-2026.png', profile: '#' },
+      { name: 'MITALI PAUL', role: 'CREATIVE', dept: 'COMPS/FY', photo: 'images/team/Mitali_2025-2026.png', profile: '#' },
+      { name: 'RUDRAKSHI ACHARYYA', role: 'MARKETING', dept: 'COMPS/FY', photo: 'images/team/Rudrakshi_2025-2026.png', profile: '#' },
+      { name: 'YASH AGROYA', role: 'MARKETING', dept: 'IT/FY', photo: 'images/team/Yash_2025-2026.png', profile: '#' },
     ];
 
     function makeCard(member) {
       const initials = member.name.split(' ').map(w => w[0]).join('');
-      const card = document.createElement('div');
+      const hasProfile = member.profile && member.profile !== '#';
+      const card = document.createElement(hasProfile ? 'a' : 'div');
       card.className = 'team-card';
+
+      if(hasProfile) {
+        card.href = member.profile;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.setAttribute('aria-label', 'Open ' + member.name + ' profile');
+      }
+
+      const photoSrc = member.photo || defaultAvatar;
+
       card.innerHTML = `
         <div class="team-photo">${initials}</div>
         <div class="team-name">${member.name}</div>
         <div class="team-role">${member.role}</div>
       `;
+
+      const photoWrap = card.querySelector('.team-photo');
+      const img = document.createElement('img');
+      img.src = photoSrc;
+      img.alt = member.name;
+      img.loading = 'lazy';
+      img.onerror = () => {
+        img.remove();
+        photoWrap.textContent = initials;
+      };
+      photoWrap.textContent = '';
+      photoWrap.appendChild(img);
+
       return card;
-    }
+  }
 
     function fillRow(rowId, members) {
       const row = document.getElementById(rowId);
@@ -1480,3 +1506,5 @@
   }
 
 })();
+
+
