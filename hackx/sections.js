@@ -18,6 +18,7 @@
     initFooterCanvas();
     // Core (one-time CSS transitions, no jank)
     initScrollFadeIn();
+    initTimelineParallaxReveal();
     initPrizeCounters();
     // initScrollProgressBar(); // removed — was showing blue line at top
     initAnnouncements();
@@ -394,6 +395,154 @@
         scrollHint.style.opacity = Math.max(0, 1 - window.scrollY / 200);
       }, { passive: true });
     }
+  }
+
+  // ===== TIMELINE PARALLAX REVEAL (timeline-only) =====
+  function initTimelineParallaxReveal() {
+    const timelineItems = Array.from(document.querySelectorAll('.timeline-item'));
+    if (timelineItems.length === 0) return;
+    const itemStates = new Map();
+    let rafId = null;
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function smoothstep(t) {
+      return t * t * (3 - 2 * t);
+    }
+
+    function setTimelineHeight(item, state) {
+      if (!state.timetable) return;
+      item.style.setProperty('--tt-height', `${state.timetable.scrollHeight}px`);
+    }
+
+    function initTimelineState() {
+      timelineItems.forEach((item) => {
+        item.classList.remove('timeline-open');
+        item.style.setProperty('--date-scale', '1');
+        item.style.setProperty('--date-glow', '0');
+        item.style.setProperty('--timeline-reveal', '0');
+
+        const timetable = item.querySelector('.timeline-timetable');
+        const events = Array.from(item.querySelectorAll('.timetable-event'));
+
+        events.forEach(eventEl => {
+          eventEl.classList.remove('is-visible');
+          eventEl.style.opacity = '0';
+          eventEl.style.transform = 'translateY(8px)';
+        });
+
+        const state = {
+          target: 0,
+          current: 0,
+          events,
+          timetable,
+        };
+
+        itemStates.set(item, state);
+        setTimelineHeight(item, state);
+      });
+    }
+
+    function updateTimelineHeights() {
+      timelineItems.forEach((item) => {
+        const state = itemStates.get(item);
+        if (!state) return;
+        setTimelineHeight(item, state);
+      });
+    }
+
+    function computeTargetsFromScroll() {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      timelineItems.forEach(item => {
+        const state = itemStates.get(item);
+        if (!state) return;
+
+        const rect = item.getBoundingClientRect();
+        const eventCount = state.events.length;
+        if (eventCount === 0) return;
+
+        // Complete reveal by viewport midpoint (50% height)
+        const start = vh * 0.9;
+        const end = vh * 0.5;
+        const progress = clamp((start - rect.top) / Math.max(start - end, 1), 0, 1);
+        state.target = smoothstep(progress);
+      });
+    }
+
+    function applyRevealProgress(item, revealProgress) {
+      const state = itemStates.get(item);
+      if (!state) return;
+      const eventCount = state.events.length;
+      if (eventCount === 0) return;
+
+      item.classList.toggle('timeline-open', revealProgress > 0.01);
+      item.style.setProperty('--date-scale', (1 + revealProgress * 0.06).toFixed(3));
+      item.style.setProperty('--date-glow', revealProgress.toFixed(3));
+      item.style.setProperty('--timeline-reveal', revealProgress.toFixed(3));
+
+      state.events.forEach((eventEl, index) => {
+        // Slight overlap between items so the sequence feels continuous.
+        const stepSpan = 1 / (eventCount + 0.35);
+        const stepStart = index * stepSpan;
+        const localProgress = clamp((revealProgress - stepStart) / Math.max(stepSpan, 0.0001), 0, 1);
+
+        eventEl.style.opacity = localProgress.toFixed(3);
+        eventEl.style.transform = `translateY(${(1 - localProgress) * 8}px)`;
+        eventEl.classList.toggle('is-visible', localProgress > 0.6);
+      });
+    }
+
+    function startRafLoop() {
+      if (rafId !== null) return;
+
+      const tick = () => {
+        let hasActiveMotion = false;
+
+        timelineItems.forEach((item) => {
+          const state = itemStates.get(item);
+          if (!state) return;
+
+          const delta = state.target - state.current;
+          if (Math.abs(delta) > 0.0008) {
+            state.current += delta * 0.16;
+            hasActiveMotion = true;
+          } else {
+            state.current = state.target;
+          }
+
+          applyRevealProgress(item, state.current);
+        });
+
+        if (hasActiveMotion) {
+          rafId = requestAnimationFrame(tick);
+        } else {
+          rafId = null;
+        }
+      };
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function updateFromScroll() {
+      computeTargetsFromScroll();
+      startRafLoop();
+    }
+
+    initTimelineState();
+    updateFromScroll();
+    window.addEventListener('scroll', updateFromScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      updateTimelineHeights();
+      updateFromScroll();
+    });
+
+    // Ensure timeline positions are correct after fonts/layout settle.
+    setTimeout(() => {
+      updateTimelineHeights();
+      updateFromScroll();
+    }, 120);
   }
 
   // ===== PRIZE COUNTERS (easeOutExpo for satisfying deceleration) =====
@@ -1322,7 +1471,7 @@
     `;
     document.head.appendChild(style);
 
-    document.querySelectorAll('.readout-row, .prize-entry, .timeline-item').forEach(el => {
+    document.querySelectorAll('.readout-row, .prize-entry').forEach(el => {
       el.classList.add('_line-trace-wrap');
       if (el.style.position === '' || el.style.position === 'static') {
         el.style.position = 'relative';
