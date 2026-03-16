@@ -460,9 +460,6 @@
         if (!state) return;
 
         const rect = item.getBoundingClientRect();
-        const eventCount = state.events.length;
-        if (eventCount === 0) return;
-
         // Complete reveal by viewport midpoint (50% height)
         const start = vh * 0.9;
         const end = vh * 0.5;
@@ -475,12 +472,13 @@
       const state = itemStates.get(item);
       if (!state) return;
       const eventCount = state.events.length;
-      if (eventCount === 0) return;
 
       item.classList.toggle('timeline-open', revealProgress > 0.01);
       item.style.setProperty('--date-scale', (1 + revealProgress * 0.06).toFixed(3));
       item.style.setProperty('--date-glow', revealProgress.toFixed(3));
       item.style.setProperty('--timeline-reveal', revealProgress.toFixed(3));
+
+      if (eventCount === 0) return;
 
       state.events.forEach((eventEl, index) => {
         // Slight overlap between items so the sequence feels continuous.
