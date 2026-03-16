@@ -1042,7 +1042,7 @@ body {
   display: flex;
   gap: 40px;
   width: max-content;
-  animation: marqueeScroll 30s linear infinite;
+  animation: marqueeScroll 60s linear infinite;
 }
 
 .past-sponsors-marquee span {
