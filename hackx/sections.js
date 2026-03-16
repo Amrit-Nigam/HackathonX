@@ -1358,8 +1358,7 @@
   }
 
   // ===== TEAM MARQUEE =====
-  function initTeamGrid() {
-    const defaultAvatar = 'images/icon.png';
+  function initTeamGrid() { 
 
     const heads = [
       { name: 'AMANDEEP SINGH', role: 'COMMITTEE HEAD', dept: 'COMPS/TY', photo: 'images/team/Amandeep_2025-2026.png',profile: '#' },
@@ -1410,37 +1409,21 @@
     ];
 
     function makeCard(member) {
-      const initials = member.name.split(' ').map(w => w[0]).join('');
-      const hasProfile = member.profile && member.profile !== '#';
-      const card = document.createElement(hasProfile ? 'a' : 'div');
+      const card = document.createElement('a');
       card.className = 'team-card';
-
-      if(hasProfile) {
-        card.href = member.profile;
-        card.target = '_blank';
-        card.rel = 'noopener noreferrer';
-        card.setAttribute('aria-label', 'Open ' + member.name + ' profile');
-      }
-
-      const photoSrc = member.photo || defaultAvatar;
+      card.href = member.profile;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      card.setAttribute('aria-label', 'Open ' + member.name + ' profile');
 
       card.innerHTML = `
-        <div class="team-photo">${initials}</div>
+        <div class="team-photo">
+          <img src="${member.photo}" alt="${member.name}" loading="lazy" />
+        </div>
         <div class="team-name">${member.name}</div>
         <div class="team-role">${member.role}</div>
       `;
-
-      const photoWrap = card.querySelector('.team-photo');
-      const img = document.createElement('img');
-      img.src = photoSrc;
-      img.alt = member.name;
-      img.loading = 'lazy';
-      img.onerror = () => {
-        img.remove();
-        photoWrap.textContent = initials;
-      };
-      photoWrap.textContent = '';
-      photoWrap.appendChild(img);
+      
 
       return card;
   }
