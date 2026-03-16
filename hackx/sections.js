@@ -369,7 +369,7 @@
       });
     }, { threshold: 0.2 });
 
-    document.querySelectorAll('.timeline-item').forEach(item => observer.observe(item));
+    document.querySelectorAll('.timeline-item, .about-stat').forEach(item => observer.observe(item));
 
     document.querySelectorAll('.section-content').forEach(el => {
       el.style.opacity = '0';

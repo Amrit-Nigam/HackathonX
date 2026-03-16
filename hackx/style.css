@@ -343,13 +343,21 @@ body {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.4s ease-out;
+}
+
+.about-stat.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .about-stat:hover {
   border-color: #FF174440;
   background: #FF174808;
   box-shadow: 0 0 12px #FF174415;
+  transform: translateY(-5px);
 }
 
 .about-stat-value {
