@@ -1234,7 +1234,11 @@
     }
 
     document.addEventListener("keydown", (e) => {
-      if (isPlaying) return;
+      if (isPlaying){
+        if(e.key === 'Escape')
+          stopMusic();  
+        return;
+      } 
       if (!e.key || e.key.length !== 1) return;
       typed += e.key.toLowerCase();
       if (typed.length > 3) typed = typed.slice(-3);
