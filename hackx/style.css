@@ -30,6 +30,17 @@ body {
     --text: #a0c4cc;
     --text-dim: #5a8a94;
     --bg: #0a1628;
+    cursor: none;
+}
+
+/* Hide system cursor across interactive elements */
+a,
+button,
+input,
+textarea,
+select,
+label {
+    cursor: none;
 }
 
 /* TV CRT Vignette Overlay */
@@ -345,6 +356,16 @@ body {
     background: var(--red);
     color: var(--bg);
     box-shadow: 0 0 12px #4fd1d930;
+}
+
+.about-left .apply-button {
+    margin-top: 18px;
+    min-height: 44px;
+    display: inline-block;
+}
+
+.about-left .apply-button > iframe {
+    border: 0;
 }
 
 .about-right {

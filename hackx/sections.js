@@ -6,6 +6,12 @@
   const DARK = "#0a1628";
   const RED_RGB = [79, 209, 217];
   const CRT_CURVATURE = 4.5; // lower = curvier
+  const CURSOR_BG = DARK;
+  const CURSOR_FG = RED;
+  const CURSOR_STROKE_PX = 3;
+  const CURSOR_SCALE = 1.2;
+  const CURSOR_ROT = -Math.PI / 5;
+  const CURSOR_OFFSET = 10;
 
   function shouldUseCrtCurvature() {
     // Reuse the project's canonical detector from `utils.js` when available.
@@ -17,6 +23,101 @@
     const coarsePointer =
       window.matchMedia && window.matchMedia("(pointer:coarse)").matches;
     return !coarsePointer;
+  }
+
+  function shouldUseCustomCursor() {
+    // Skip on touch/coarse pointer devices.
+    if (typeof window.isTouchScreenDevice === "function") {
+      return !window.isTouchScreenDevice();
+    }
+    const coarsePointer =
+      window.matchMedia && window.matchMedia("(pointer:coarse)").matches;
+    return !coarsePointer;
+  }
+
+  function initGlobalCustomCursor() {
+    if (!shouldUseCustomCursor()) return;
+
+    const cursorCanvas = document.createElement("canvas");
+    cursorCanvas.id = "global-custom-cursor";
+    cursorCanvas.style.cssText = `
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 9998;
+      pointer-events: none;
+    `;
+    document.body.appendChild(cursorCanvas);
+
+    const ctx = cursorCanvas.getContext("2d");
+    if (!ctx) {
+      cursorCanvas.remove();
+      return;
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      cursorCanvas.width = Math.max(1, Math.floor(window.innerWidth * dpr));
+      cursorCanvas.height = Math.max(1, Math.floor(window.innerHeight * dpr));
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    let mouseX = -9999;
+    let mouseY = -9999;
+    let hide = false;
+
+    function isInsideHero(x, y) {
+      const hero = document.getElementById("hero-section");
+      if (!hero) return false;
+      const r = hero.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    }
+
+    window.addEventListener(
+      "mousemove",
+      (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        hide = isInsideHero(mouseX, mouseY);
+      },
+      { passive: true },
+    );
+
+    window.addEventListener(
+      "mouseleave",
+      () => {
+        mouseX = -9999;
+        mouseY = -9999;
+      },
+      { passive: true },
+    );
+
+    function draw() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      if (!hide && mouseX >= 0 && mouseY >= 0) {
+        ctx.save();
+        ctx.translate(mouseX + CURSOR_OFFSET, mouseY + CURSOR_OFFSET);
+        ctx.scale(CURSOR_SCALE, CURSOR_SCALE);
+        ctx.rotate(CURSOR_ROT);
+
+        ctx.fillStyle = CURSOR_BG;
+        ctx.strokeStyle = CURSOR_FG;
+        ctx.lineWidth = CURSOR_STROKE_PX;
+        ctx.beginPath();
+        ctx.moveTo(0, -10);
+        ctx.lineTo(7.5, 10);
+        ctx.lineTo(0, 5);
+        ctx.lineTo(-7.5, 10);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
+      requestAnimationFrame(draw);
+    }
+    requestAnimationFrame(draw);
   }
 
   function initGlobalCrtCurvatureForSectionCanvases() {
@@ -69,6 +170,8 @@
 
     const composeCanvas = document.createElement("canvas");
     const composeCtx = composeCanvas.getContext("2d", { alpha: true });
+    // Keep UI (game text/boxes) crisp when compositing/scaling.
+    composeCtx.imageSmoothingEnabled = false;
 
     const vertSrc = `
       attribute vec2 a_pos;
@@ -153,8 +256,9 @@
 
     const texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    // Nearest-neighbor to avoid blurring pixel-ish UI.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
@@ -277,6 +381,7 @@
     initIdleMessage();
     initMusicDanceExperience();
     initGlobalCrtCurvatureForSectionCanvases();
+    initGlobalCustomCursor();
   }
 
   // ===== LENIS SMOOTH SCROLL =====
