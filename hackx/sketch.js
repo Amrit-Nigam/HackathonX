@@ -129,6 +129,9 @@ var palette = mobilePalette;
 // holds filename, initial bin levels, coordinates
 let macrodataFile;
 
+// Add image svg
+let logoImg;
+
 function preload() {
   nopeImg = loadImage("images/nope.png");
   completedImg = loadImage("images/100.png");
