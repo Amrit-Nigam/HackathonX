@@ -136,7 +136,7 @@ function preload() {
   nopeImg = loadImage("images/nope.png");
   completedImg = loadImage("images/100.png");
   sharedImg = loadImage("images/clipboard.png");
-
+  logoImg = loadImage('images/logo.svg')
   crtShader = loadShader("shaders/crt.vert.glsl", "shaders/crt.frag.glsl");
 }
 
@@ -592,12 +592,16 @@ function drawTop(percent) {
   g.textFont("Courier");
   g.noStroke();
 
-  // Left: CODECELL // HACK X
-  g.textSize(textSz);
-  g.textAlign(LEFT, TOP);
-  g.fill(palette.FG);
-  const label = smaller < 400 ? "HACK X" : "CODECELL // HACK X";
-  g.text(label, g.width * 0.04, y);
+  // Left: Logo
+  if (logoImg) {
+    g.imageMode(CENTER);
+    if (!useShader) g.tint(palette.FG);
+
+    let logoWidth = 100;
+    let logoHeight = 100;
+    // Align the center of the image with the center of the text vertically
+    g.image(logoImg, g.width * 0.04 + logoWidth / 2, y + textSz / 2, logoWidth, logoHeight);
+  }
 
   // Right: event info
   g.textAlign(RIGHT, TOP);
