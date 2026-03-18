@@ -41,12 +41,10 @@ body {
     height: 100vh;
     pointer-events: none;
     z-index: 9999;
-    background: radial-gradient(
-        ellipse at center,
-        transparent 50%,
-        rgba(0, 0, 0, 0.3) 75%,
-        rgba(0, 0, 0, 0.95) 100%
-    );
+    background: radial-gradient(ellipse at center,
+            transparent 50%,
+            rgba(0, 0, 0, 0.3) 75%,
+            rgba(0, 0, 0, 0.95) 100%);
     box-shadow: inset 0 0 12vmin rgba(0, 0, 0, 0.9);
 }
 
@@ -67,6 +65,7 @@ body {
 /* ===== KEYFRAMES ===== */
 
 @keyframes breathe {
+
     0%,
     100% {
         border-color: #4fd1d920;
@@ -78,6 +77,7 @@ body {
 }
 
 @keyframes flicker {
+
     0%,
     100% {
         opacity: 1;
@@ -105,6 +105,7 @@ body {
 }
 
 @keyframes subtlePulse {
+
     0%,
     100% {
         opacity: 0.6;
@@ -126,6 +127,7 @@ body {
 }
 
 @keyframes pulse-border {
+
     0%,
     100% {
         border-color: #4fd1d9;
@@ -139,6 +141,7 @@ body {
 }
 
 @keyframes bounce {
+
     0%,
     100% {
         transform: translateX(-50%) translateY(0);
@@ -211,7 +214,7 @@ body {
     z-index: 1;
 }
 
-#game-container > canvas:first-of-type {
+#game-container>canvas:first-of-type {
     display: block;
     touch-action: none;
     cursor: none;
@@ -890,20 +893,16 @@ body {
     overflow: hidden;
     width: 100%;
     margin-bottom: 12px;
-    -webkit-mask-image: linear-gradient(
-        90deg,
-        transparent,
-        black 10%,
-        black 90%,
-        transparent
-    );
-    mask-image: linear-gradient(
-        90deg,
-        transparent,
-        black 10%,
-        black 90%,
-        transparent
-    );
+    -webkit-mask-image: linear-gradient(90deg,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent);
+    mask-image: linear-gradient(90deg,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent);
 }
 
 .team-marquee {
@@ -1125,20 +1124,16 @@ a.team-card {
 .past-sponsors-marquee-wrap {
     overflow: hidden;
     width: 100%;
-    -webkit-mask-image: linear-gradient(
-        90deg,
-        transparent,
-        black 10%,
-        black 90%,
-        transparent
-    );
-    mask-image: linear-gradient(
-        90deg,
-        transparent,
-        black 10%,
-        black 90%,
-        transparent
-    );
+    -webkit-mask-image: linear-gradient(90deg,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent);
+    mask-image: linear-gradient(90deg,
+            transparent,
+            black 10%,
+            black 90%,
+            transparent);
 }
 
 .past-sponsors-marquee {
@@ -1793,4 +1788,13 @@ a.team-card {
     .footer-copy {
         font-size: 8px;
     }
+}
+
+/* ===== MUSIC COLOR OSCILLATION ===== */
+html.theme-oscillating {
+    transition: filter 0.35s ease;
+}
+
+html.theme-blue {
+    filter: hue-rotate(-108deg);
 }

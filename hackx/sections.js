@@ -34,6 +34,7 @@
     initTenFireworks();
     initTrackTagFlash();
     initIdleMessage();
+    initMusicDanceExperience();
   }
 
   // ===== LENIS SMOOTH SCROLL =====
@@ -956,6 +957,8 @@
 
       if (clickCount >= 3) {
         clickCount = 0;
+        // Don't show during music dance experience
+        if (document.documentElement.classList.contains('theme-oscillating')) return;
         showFlashMessage("YOU FOUND A SECRET. THE CODE REMEMBERS.", RED);
       }
     });
@@ -1161,6 +1164,189 @@
     }
     draw();
   }
+
+  // ===== EASTER EGG: Music Dance Experience =====
+  function initMusicDanceExperience() {
+    const audio = document.getElementById("secretMusic");
+    audio.volume = 0.3;
+    const stopBtn = document.getElementById("stopMusicBtn");
+    if (!audio || !stopBtn) return;
+
+    let typed = '';
+    let isPlaying = false;
+    let colorOscillationInterval = null;
+
+    function startColorOscillation() {
+      // Ensure we start on red (no class)
+      document.documentElement.classList.remove('theme-blue');
+      document.documentElement.classList.add('theme-oscillating');
+      let isBlue = false;
+      colorOscillationInterval = setInterval(() => {
+        isBlue = !isBlue;
+        if (isBlue) {
+          document.documentElement.classList.add('theme-blue');
+        } else {
+          document.documentElement.classList.remove('theme-blue');
+        }
+      }, 400);
+    }
+
+    function stopColorOscillation() {
+      if (colorOscillationInterval) {
+        clearInterval(colorOscillationInterval);
+        colorOscillationInterval = null;
+      }
+      // Reset back to red
+      document.documentElement.classList.remove('theme-blue');
+      document.documentElement.classList.remove('theme-oscillating');
+    }
+
+    // Container for music UI (title + stop button)
+    let musicUIContainer = null;
+    let lockOverlay = null;
+
+    function startMusic() {
+      if (isPlaying) return;
+      audio.play().catch(() => {
+        // Autoplay may block if user hasn't interacted yet.
+      });
+      isPlaying = true;
+
+      // Smooth scroll to top with JS animation, then lock
+      const scrollStart = window.scrollY || document.documentElement.scrollTop;
+      if (scrollStart > 0) {
+        const scrollDuration = 800;
+        const startTime = performance.now();
+        function animateScroll(now) {
+          const elapsed = now - startTime;
+          const progress = Math.min(elapsed / scrollDuration, 1);
+          // easeInOutQuad
+          const ease = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+          window.scrollTo(0, scrollStart * (1 - ease));
+          if (progress < 1) {
+            requestAnimationFrame(animateScroll);
+          } else {
+            document.documentElement.style.overflowY = 'hidden';
+            document.body.style.overflowY = 'hidden';
+          }
+        }
+        requestAnimationFrame(animateScroll);
+      } else {
+        document.documentElement.style.overflowY = 'hidden';
+        document.body.style.overflowY = 'hidden';
+      }
+
+      // Block interaction with game
+      lockOverlay = document.createElement('div');
+      lockOverlay.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 99998; background: transparent; cursor: default;
+      `;
+      document.body.appendChild(lockOverlay);
+
+      // Disable game canvas and text selection
+      const heroSection = document.getElementById('hero-section');
+      if (heroSection) heroSection.style.pointerEvents = 'none';
+      document.body.style.userSelect = 'none';
+
+      // Create music UI container (centered on screen)
+      musicUIContainer = document.createElement('div');
+      musicUIContainer.style.cssText = `
+        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        z-index: 99999; display: flex; flex-direction: column;
+        align-items: center; gap: 16px;
+        opacity: 0; transition: opacity 0.4s ease;
+      `;
+
+      // Title label (unclickable)
+      const titleLabel = document.createElement('div');
+      titleLabel.innerHTML = 'THE MUSIC<br>DANCE EXPERIENCE';
+      titleLabel.style.cssText = `
+        color: #ff0000ff; font-family: 'Geist Pixel', 'Courier New', monospace; font-size: 75px;
+        text-align: center; pointer-events: none; font-weight : bold;
+        text-shadow: 0 0 20px #ff0000ff; padding: 20px 40px;
+        background: rgba(10, 0, 8, 1.0); border: 1px solid #ff0000ff;
+        letter-spacing: 4px; text-transform: uppercase;
+      `;
+      musicUIContainer.appendChild(titleLabel);
+
+      // Style stop button
+      stopBtn.textContent = 'STOP THE MUSIC DANCE EXPERIENCE';
+      stopBtn.style.cssText = `
+        color: #ff0000ff; font-family: 'Courier New', monospace; font-size: 18px;
+        text-align: center; cursor: pointer;
+        text-shadow: 0 0 20px #ff0000ff; padding: 20px 40px;
+        background: rgba(10, 0, 8, 0.85); border: 1px solid #ff0000ff;
+        letter-spacing: 4px; text-transform: uppercase;
+        display: block;
+      `;
+      musicUIContainer.appendChild(stopBtn);
+
+      document.body.appendChild(musicUIContainer);
+      requestAnimationFrame(() => { musicUIContainer.style.opacity = '1'; });
+
+      startColorOscillation();
+    }
+
+    function stopMusic() {
+      audio.pause();
+      audio.currentTime = 0;
+      isPlaying = false;
+
+      // Unlock scroll
+      document.documentElement.style.overflowY = '';
+      document.body.style.overflowY = 'auto';
+
+      // Remove interaction blocker
+      if (lockOverlay) {
+        lockOverlay.remove();
+        lockOverlay = null;
+      }
+
+      // Re-enable game canvas and text selection
+      const heroSection = document.getElementById('hero-section');
+      if (heroSection) heroSection.style.pointerEvents = '';
+      document.body.style.userSelect = '';
+
+      // Fade out music UI container, then remove
+      if (musicUIContainer) {
+        musicUIContainer.style.opacity = '0';
+        const container = musicUIContainer;
+        setTimeout(() => {
+          container.remove();
+          stopBtn.style.display = 'none';
+          document.body.appendChild(stopBtn);
+        }, 400);
+        musicUIContainer = null;
+      } else {
+        stopBtn.style.display = 'none';
+        document.body.appendChild(stopBtn);
+      }
+
+      stopColorOscillation();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (isPlaying) {
+        if (e.key === 'Escape')
+          stopMusic();
+        return;
+      }
+      if (!e.key || e.key.length !== 1) return;
+      typed += e.key.toLowerCase();
+      if (typed.length > 3) typed = typed.slice(-3);
+      if (typed === "mde") {
+        startMusic();
+        typed = "";
+      }
+    });
+
+    stopBtn.addEventListener("click", stopMusic);
+    audio.addEventListener("ended", stopMusic);
+  }
+
 
   // ===== EASTER EGG: Track Tag Click Flash =====
   function initTrackTagFlash() {
