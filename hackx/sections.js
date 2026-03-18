@@ -34,6 +34,9 @@
     initTenFireworks();
     initTrackTagFlash();
     initIdleMessage();
+
+    // Hero zoom: scroll "into" the monitor screen.
+    initHeroZoomIntoSite();
   }
 
   // ===== LENIS SMOOTH SCROLL =====
@@ -414,6 +417,56 @@
         { passive: true },
       );
     }
+  }
+
+  // ===== HERO: Zoom into the screen on scroll =====
+  function initHeroZoomIntoSite() {
+    const hero = document.getElementById("hero-section");
+    const monitor = document.querySelector(".hero-monitor");
+    const about = document.getElementById("about-section");
+    if (!hero || !monitor || !about) return;
+
+    let ticking = false;
+
+    function clamp01(x) {
+      return Math.max(0, Math.min(1, x));
+    }
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function update() {
+      ticking = false;
+      const rect = hero.getBoundingClientRect();
+      const heroH = hero.offsetHeight || 1;
+
+      // Progress through the hero section: 0 at top, 1 when hero is fully scrolled past.
+      const raw = clamp01((-rect.top) / heroH);
+      const t = easeOutCubic(raw);
+
+      // Toggle a "light hero" theme while hero is on screen.
+      document.body.classList.toggle("hero-light", rect.bottom > 0);
+
+      // Zoom finishes slightly before we fully leave hero for a nicer handoff.
+      const zoomT = easeOutCubic(clamp01(raw / 0.92));
+
+      // Fade bezel after zoom starts.
+      const fadeT = easeOutCubic(clamp01((raw - 0.22) / 0.58));
+
+      monitor.style.setProperty("--hero-zoom", zoomT.toFixed(4));
+      monitor.style.setProperty("--hero-bezel-fade", fadeT.toFixed(4));
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
   }
 
   // ===== PRIZE COUNTERS (easeOutExpo for satisfying deceleration) =====

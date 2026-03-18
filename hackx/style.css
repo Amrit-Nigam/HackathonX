@@ -30,7 +30,11 @@ body {
     --text: #a0c4cc;
     --text-dim: #5a8a94;
     --bg: #0a1628;
+    --hero-cream: #f7f5ef;
+    --top-nav-h: 64px;
 }
+
+/* Removed whole-page warp + CRT overlay for performance */
 
 /* TV CRT Vignette Overlay */
 .vignette-overlay {
@@ -48,6 +52,88 @@ body {
         rgba(0, 0, 0, 0.95) 100%
     );
     box-shadow: inset 0 0 12vmin rgba(0, 0, 0, 0.9);
+}
+
+/* In hero we want clean, bright cream (no heavy vignette) */
+body.hero-light {
+    background-color: var(--hero-cream);
+}
+
+body.hero-light .vignette-overlay {
+    opacity: 0.18;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(0, 0, 0, 0) 58%,
+        rgba(0, 0, 0, 0.12) 84%,
+        rgba(0, 0, 0, 0.22) 100%
+    );
+    box-shadow: none;
+}
+
+/* Top navbar (outside the monitor box) */
+#top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9997; /* below vignette, above content */
+    pointer-events: none; /* allow underlying hero interactions by default */
+    height: var(--top-nav-h);
+    background: linear-gradient(
+        180deg,
+        rgba(247, 245, 239, 0.92) 0%,
+        rgba(247, 245, 239, 0.72) 70%,
+        rgba(247, 245, 239, 0) 100%
+    );
+    backdrop-filter: blur(6px);
+}
+
+.top-nav-inner {
+    width: min(1220px, 96vw);
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    pointer-events: auto;
+}
+
+.top-nav-brand {
+    color: rgba(10, 22, 40, 0.68);
+    text-transform: uppercase;
+    letter-spacing: 0.26em;
+    font-weight: 900;
+    font-size: 12px;
+}
+
+.top-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+}
+
+.top-nav-links a {
+    color: rgba(10, 22, 40, 0.6);
+    text-decoration: none;
+    padding: 7px 10px;
+    border-radius: 12px;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.top-nav-links a:hover {
+    background: rgba(10, 22, 40, 0.08);
+    color: rgba(10, 22, 40, 0.82);
+}
+
+@media (max-width: 980px) {
+    .top-nav-links {
+        display: none;
+    }
 }
 
 /* Scan-line overlay removed — was causing compositing overhead */
@@ -198,14 +284,34 @@ body {
 #hero-section {
     height: 100vh;
     position: relative;
-    display: block;
-    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--top-nav-h) 0 0;
+    background: var(--hero-cream);
+}
+
+/* Cream backdrop layer (covers any dark bleed from other sections) */
+#hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at 50% 40%,
+        rgba(255, 255, 255, 0.85) 0%,
+        rgba(247, 245, 239, 1) 62%,
+        rgba(235, 231, 223, 1) 100%
+    );
+    z-index: 0;
+}
+
+#hero-section > * {
+    position: relative;
+    z-index: 1;
 }
 
 #game-container {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
     height: 100%;
     z-index: 1;
@@ -230,6 +336,164 @@ body {
     text-transform: uppercase;
     animation: bounce 2s infinite;
     pointer-events: none;
+}
+
+/* ===== HERO MONITOR COMPONENT (no images) ===== */
+.hero-monitor {
+    position: relative;
+    width: min(1220px, 96vw);
+    height: min(680px, 88vh);
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 28px;
+    align-items: center;
+    --hero-zoom: 0;
+    --hero-bezel-fade: 0;
+}
+
+.hero-monitor-bezel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 34px;
+    background: #f7f5ef;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    border: 1px solid rgba(20, 22, 25, 0.12);
+    padding: 28px 32px 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transform: translateZ(0) scale(calc(1 + var(--hero-zoom) * 0.06));
+    opacity: calc(1 - var(--hero-bezel-fade));
+}
+
+.hero-monitor-bezel::before {
+    /* inner bevel */
+    content: "";
+    position: absolute;
+    inset: 22px;
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(255, 255, 255, 0.08));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -20px 38px rgba(0, 0, 0, 0.22);
+    pointer-events: none;
+}
+
+.hero-monitor-header {
+    position: relative;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+    z-index: 3;
+    color: rgba(10, 22, 40, 0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 900;
+    font-size: 12px;
+}
+
+.hero-monitor-header-lines {
+    height: 18px;
+    border-top: 2px solid rgba(10, 22, 40, 0.22);
+    border-bottom: 2px solid rgba(10, 22, 40, 0.12);
+    opacity: 0.9;
+}
+
+.hero-monitor-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 0 4px;
+}
+
+.hero-monitor-header-title {
+    padding: 0;
+    transform: none;
+    color: rgba(10, 22, 40, 0.62);
+    font-size: 12px;
+}
+
+
+.hero-monitor-screen {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    border-radius: 26px;
+    overflow: hidden;
+    background: #05090f;
+    box-shadow:
+        inset 0 0 0 1px rgba(79, 209, 217, 0.14),
+        inset 0 0 26px rgba(0, 0, 0, 0.7),
+        inset 0 0 120px rgba(0, 0, 0, 0.6);
+    /* sit above the ::before bevel */
+    z-index: 2;
+    transform-origin: 50% 52%;
+    transform: translateZ(0) scale(calc(1 + var(--hero-zoom) * 1.35));
+}
+
+.hero-monitor-screen::before {
+    /* glass highlight */
+    content: "";
+    position: absolute;
+    inset: -35%;
+    background: radial-gradient(
+        ellipse at 35% 22%,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0.05) 26%,
+        rgba(255, 255, 255, 0) 55%
+    );
+    transform: rotate(-8deg);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.hero-monitor-screen #scroll-hint {
+    bottom: 18px;
+}
+
+.hero-monitor-speaker {
+    height: min(520px, 70vh);
+    border-radius: 26px;
+    background: #f7f5ef;
+    box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+    border: 1px solid rgba(20, 22, 25, 0.12);
+    position: relative;
+    overflow: hidden;
+    opacity: calc(1 - var(--hero-bezel-fade));
+    transform: translateZ(0) scale(calc(1 + var(--hero-zoom) * 0.06));
+}
+
+.hero-monitor-speaker::before {
+    /* dotted grille */
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border-radius: 22px;
+    background:
+        radial-gradient(circle at 2px 2px, rgba(10, 22, 40, 0.38) 1px, transparent 1.8px)
+            0 0 / 10px 10px;
+    opacity: 0.65;
+}
+
+@media (max-width: 980px) {
+    .hero-monitor {
+        grid-template-columns: 1fr;
+        height: min(720px, 92vh);
+        gap: 14px;
+    }
+    .hero-monitor-speaker {
+        display: none;
+    }
+    .hero-monitor-bezel {
+        padding: 18px 18px 22px;
+    }
+    .hero-monitor-nav {
+        display: none;
+    }
 }
 
 /* ===== GLITCH TEXT ===== */

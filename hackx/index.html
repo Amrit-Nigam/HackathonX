@@ -39,6 +39,18 @@
         <div class="vignette-overlay"></div>
         <!-- Fixed elements -->
         <div id="announcement-bar"></div>
+        <header id="top-nav" aria-label="Site header">
+            <div class="top-nav-inner">
+                <div class="top-nav-brand">HACK X</div>
+                <nav class="top-nav-links" aria-label="Primary">
+                    <a href="#about-section">ABOUT</a>
+                    <a href="#prizes-section">PRIZES</a>
+                    <a href="#perks-section">PERKS</a>
+                    <a href="#team-section">TEAM</a>
+                    <a href="#faq-section">FAQ</a>
+                </nav>
+            </div>
+        </header>
         <a
             id="register-btn"
             href="https://hackx.codecell.io/register"
@@ -48,9 +60,16 @@
 
         <!-- SECTION 1: HERO — The Game -->
         <section id="hero-section" class="section">
-            <div id="game-container"></div>
-            <div id="scroll-hint">
-                <span>&#9660; SCROLL TO DECRYPT MORE &#9660;</span>
+            <div class="hero-monitor" aria-hidden="false">
+                <div class="hero-monitor-bezel">
+                    <div class="hero-monitor-screen">
+                    <div id="game-container"></div>
+                    <div id="scroll-hint">
+                        <span>&#9660; SCROLL TO DECRYPT MORE &#9660;</span>
+                    </div>
+                </div>
+                </div>
+                <div class="hero-monitor-speaker" aria-hidden="true"></div>
             </div>
         </section>
 

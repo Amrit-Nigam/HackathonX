@@ -193,12 +193,16 @@ var zoff = 0;
 var smaller;
 
 function setup() {
-  const cnv = createCanvas(windowWidth, windowHeight);
+  const mount = document.getElementById("game-container");
+  const w = mount?.clientWidth || windowWidth;
+  const h = mount?.clientHeight || windowHeight;
+
+  const cnv = createCanvas(w, h);
   cnv.parent("game-container");
   frameRate(30);
 
   // create a downscaled graphics buffer to draw to, we'll upscale after applying crt shader
-  g = createGraphics(windowWidth, windowHeight);
+  g = createGraphics(w, h);
 
   // Scale buffer for mobile
   smaller = min(g.width, g.height);
@@ -1142,9 +1146,13 @@ function keyPressed() {
 }
 
 function windowResized(ev) {
-  resizeCanvas(windowWidth, windowHeight);
-  g.resizeCanvas(windowWidth, windowHeight);
-  shaderLayer.resizeCanvas(windowWidth, windowHeight);
+  const mount = document.getElementById("game-container");
+  const w = mount?.clientWidth || windowWidth;
+  const h = mount?.clientHeight || windowHeight;
+
+  resizeCanvas(w, h);
+  g.resizeCanvas(w, h);
+  shaderLayer.resizeCanvas(w, h);
   crtShader.setUniform("u_resolution", [g.width, g.height]);
 
   smaller = min(g.width, g.height);
