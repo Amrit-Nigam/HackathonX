@@ -355,6 +355,18 @@ body {
     width: 340px;
 }
 
+.about-model {
+    width: 420px;
+    height: 420px;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.about-model:focus {
+    outline: none;
+}
+
 .about-stat {
     border: 1px solid #4fd1d918;
     padding: 32px 20px;
@@ -1582,6 +1594,16 @@ a.team-card {
 
     .about-right {
         width: 100%;
+    }
+
+    .about-right {
+        display: block;
+    }
+
+    .about-model {
+        width: min(520px, 96vw);
+        height: min(520px, 96vw);
+        margin: 0 auto;
     }
 
     .about-left .glitch-text {

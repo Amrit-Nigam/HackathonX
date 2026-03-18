@@ -10,6 +10,7 @@
     <meta name="theme-color" content="#4fd1d9" />
     <meta property="og:title" content="HACK X // CodeCell" />
     <meta property="og:description" content="The hackathon experience. Refine your data. Prove your worth." />
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
         @font-face {
             font-family: "Geist Pixel";
@@ -64,22 +65,18 @@
                     APRIL 3RD →</a>
             </div>
             <div class="about-right">
-                <div class="about-stat">
-                    <div class="about-stat-label">DATE</div>
-                    <div class="about-stat-value">APR 11-12</div>
-                </div>
-                <div class="about-stat">
-                    <div class="about-stat-label">DURATION</div>
-                    <div class="about-stat-value">24 HRS</div>
-                </div>
-                <div class="about-stat">
-                    <div class="about-stat-label">VENUE</div>
-                    <div class="about-stat-value">KJ SOMAIYA</div>
-                </div>
-                <div class="about-stat">
-                    <div class="about-stat-label">PRIZES</div>
-                    <div class="about-stat-value">₹3L+</div>
-                </div>
+                <model-viewer
+                    class="about-model"
+                    src="3dmodel/3D%20Asset%20Final.glb"
+                    alt="Hack X 3D asset"
+                    camera-controls
+                    auto-rotate
+                    rotation-per-second="20deg"
+                    shadow-intensity="0.6"
+                    exposure="1.1"
+                    environment-image="neutral"
+                    disable-zoom
+                ></model-viewer>
             </div>
         </div>
     </section>

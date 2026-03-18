@@ -5,6 +5,247 @@
   const RED = "#4fd1d9";
   const DARK = "#0a1628";
   const RED_RGB = [79, 209, 217];
+  const CRT_CURVATURE = 4.5; // lower = curvier
+
+  function shouldUseCrtCurvature() {
+    // Reuse the project's canonical detector from `utils.js` when available.
+    if (typeof window.isTouchScreenDevice === "function") {
+      return !window.isTouchScreenDevice();
+    }
+
+    // Fallback: avoid disabling on desktops that expose touch APIs.
+    const coarsePointer =
+      window.matchMedia && window.matchMedia("(pointer:coarse)").matches;
+    return !coarsePointer;
+  }
+
+  function initGlobalCrtCurvatureForSectionCanvases() {
+    if (!shouldUseCrtCurvature()) return;
+
+    // Signal to the p5 layer that global CRT is active (so it can skip its own CRT pass).
+    window.__HACKX_GLOBAL_CRT__ = true;
+
+    let sourceCanvases = [];
+    function collectSourceCanvases() {
+      // Include the p5 hero canvas too so the curvature feels like one continuous screen.
+      const all = Array.from(
+        document.querySelectorAll(".section canvas, #footer-section canvas"),
+      ).filter((c) => !(c instanceof HTMLCanvasElement ? c.classList.contains("crt-global-canvas") : false));
+      sourceCanvases = all;
+      sourceCanvases.forEach((c) => {
+        // Hide all source canvases; the global CRT canvas will draw them instead.
+        if (!c.classList.contains("crt-global-canvas")) c.style.opacity = "0";
+      });
+    }
+
+    collectSourceCanvases();
+
+    const glCanvas = document.createElement("canvas");
+    glCanvas.className = "crt-global-canvas";
+    glCanvas.style.cssText = `
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    `;
+    document.body.appendChild(glCanvas);
+
+    const gl =
+      glCanvas.getContext("webgl", {
+        alpha: true,
+        antialias: false,
+        premultipliedAlpha: true,
+        preserveDrawingBuffer: false,
+      }) || glCanvas.getContext("experimental-webgl");
+    if (!gl) {
+      glCanvas.remove();
+      return;
+    }
+
+    // If canvases are created after DOMContentLoaded (p5 does this), observe and collect.
+    const observer = new MutationObserver(() => collectSourceCanvases());
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    const composeCanvas = document.createElement("canvas");
+    const composeCtx = composeCanvas.getContext("2d", { alpha: true });
+
+    const vertSrc = `
+      attribute vec2 a_pos;
+      varying vec2 v_uv;
+      void main() {
+        v_uv = (a_pos + 1.0) * 0.5;
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+      }
+    `;
+
+    const fragSrc = `
+      precision mediump float;
+      varying vec2 v_uv;
+      uniform sampler2D u_tex;
+      uniform vec2 u_curvature;
+
+      vec2 curveRemapUV(vec2 uv) {
+        uv = uv * 2.0 - 1.0;
+        vec2 offset = abs(uv.yx) / u_curvature;
+        uv = uv + uv * offset * offset;
+        uv = uv * 0.5 + 0.5;
+        return uv;
+      }
+
+      void main() {
+        vec2 uv = v_uv;
+        vec2 remappedUV = curveRemapUV(uv);
+        if (remappedUV.x < 0.0 || remappedUV.y < 0.0 || remappedUV.x > 1.0 || remappedUV.y > 1.0) {
+          gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);
+          return;
+        }
+        gl_FragColor = texture2D(u_tex, remappedUV);
+      }
+    `;
+
+    function compileShader(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        gl.deleteShader(s);
+        return null;
+      }
+      return s;
+    }
+
+    function createProgram(vsSrc, fsSrc) {
+      const vs = compileShader(gl.VERTEX_SHADER, vsSrc);
+      const fs = compileShader(gl.FRAGMENT_SHADER, fsSrc);
+      if (!vs || !fs) return null;
+      const p = gl.createProgram();
+      gl.attachShader(p, vs);
+      gl.attachShader(p, fs);
+      gl.linkProgram(p);
+      gl.deleteShader(vs);
+      gl.deleteShader(fs);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) {
+        gl.deleteProgram(p);
+        return null;
+      }
+      return p;
+    }
+
+    const program = createProgram(vertSrc, fragSrc);
+    if (!program) {
+      glCanvas.remove();
+      sourceCanvases.forEach((c) => (c.style.opacity = ""));
+      return;
+    }
+
+    const quad = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW,
+    );
+
+    const aPos = gl.getAttribLocation(program, "a_pos");
+    const uTex = gl.getUniformLocation(program, "u_tex");
+    const uCurv = gl.getUniformLocation(program, "u_curvature");
+
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.max(1, Math.floor(window.innerWidth * dpr));
+      const h = Math.max(1, Math.floor(window.innerHeight * dpr));
+      glCanvas.width = w;
+      glCanvas.height = h;
+      composeCanvas.width = w;
+      composeCanvas.height = h;
+      gl.viewport(0, 0, w, h);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    let lastFrame = 0;
+    const minFrameMs = 1000 / 30; // cap at ~30fps for perf
+    const FLAT_CURVATURE = 10000.0;
+
+    function draw(now) {
+      if (now - lastFrame < minFrameMs) {
+        requestAnimationFrame(draw);
+        return;
+      }
+      lastFrame = now;
+
+      // Fade curvature to flat as the footer enters the viewport.
+      // t = 0 -> full curvature, t = 1 -> flat.
+      let t = 0;
+      const footer = document.getElementById("footer-section");
+      if (footer) {
+        const r = footer.getBoundingClientRect();
+        const fadeStart = window.innerHeight * 0.65;
+        const fadeEnd = window.innerHeight * 0.15;
+        if (r.top < fadeStart) {
+          t = Math.min(1, Math.max(0, (fadeStart - r.top) / (fadeStart - fadeEnd)));
+        }
+      }
+      const curv = CRT_CURVATURE + (FLAT_CURVATURE - CRT_CURVATURE) * t;
+
+      // Composite all section canvases into one viewport-sized canvas in screen space.
+      composeCtx.clearRect(0, 0, composeCanvas.width, composeCanvas.height);
+      composeCtx.fillStyle = DARK;
+      composeCtx.fillRect(0, 0, composeCanvas.width, composeCanvas.height);
+      const dpr = window.devicePixelRatio || 1;
+      for (const c of sourceCanvases) {
+        if (!c || c === glCanvas) continue;
+        const rect = c.getBoundingClientRect();
+        if (rect.width <= 1 || rect.height <= 1) continue;
+        if (rect.bottom < 0 || rect.top > window.innerHeight) continue;
+        const dx = rect.left * dpr;
+        const dy = rect.top * dpr;
+        const dw = rect.width * dpr;
+        const dh = rect.height * dpr;
+        try {
+          composeCtx.drawImage(c, dx, dy, dw, dh);
+        } catch {
+          // Ignore transient drawImage failures (e.g., zero-sized during layout).
+        }
+      }
+
+      // Upload composed viewport to WebGL texture and curve it once.
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        composeCanvas,
+      );
+
+      gl.useProgram(program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.uniform1i(uTex, 0);
+      gl.uniform2f(uCurv, curv, curv);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+  }
 
   document.addEventListener("DOMContentLoaded", init);
 
@@ -35,6 +276,7 @@
     initTrackTagFlash();
     initIdleMessage();
     initMusicDanceExperience();
+    initGlobalCrtCurvatureForSectionCanvases();
   }
 
   // ===== LENIS SMOOTH SCROLL =====
@@ -329,22 +571,6 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 80) {
-            ctx.strokeStyle = `rgba(${RED_RGB.join(",")}, ${(1 - dist / 80) * 0.1})`;
-            ctx.lineWidth = 0.5;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
 
       particles.forEach((p) => {
         p.x += p.vx;

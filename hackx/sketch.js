@@ -209,6 +209,11 @@ function setup() {
 
   // We don't want to use shader on mobile
   useShader = !isTouchScreenDevice();
+  // If the site is using the global CRT curvature pass (sections.js),
+  // skip the game's local CRT shader to keep one continuous "screen".
+  if (typeof window !== "undefined" && window.__HACKX_GLOBAL_CRT__ === true) {
+    useShader = false;
+  }
 
   // The shader boosts colour values so we reset the palette if using shader
   if (useShader) {
@@ -360,11 +365,13 @@ let prevPercent;
 
 function draw() {
   g.colorMode(RGB);
+  const globalCrtActive =
+    typeof window !== "undefined" && window.__HACKX_GLOBAL_CRT__ === true;
 
   // Boot sequence gate
   if (booting) {
     drawBootSequence();
-    if (useShader) {
+    if (useShader && !globalCrtActive) {
       shaderLayer.rect(0, 0, g.width, g.height);
       shaderLayer.shader(crtShader);
       crtShader.setUniform("u_tex", g);
@@ -564,7 +571,7 @@ function draw() {
     g.blendMode(BLEND);
   }
 
-  if (useShader) {
+  if (useShader && !globalCrtActive) {
     shaderLayer.rect(0, 0, g.width, g.height);
     shaderLayer.shader(crtShader);
     crtShader.setUniform("u_tex", g);
