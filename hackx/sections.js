@@ -503,8 +503,17 @@
       setTimeout(() => bar.classList.remove("visible"), 5000);
     }
 
+    // Show normal announcements as before
     setTimeout(show, 30000);
     setInterval(show, 30000 + Math.random() * 15000);
+
+    // Show periodic hint every 2 minutes
+    function showHint() {
+      bar.textContent = 'Hint: Try dragging over certain numbers to progress in the game!';
+      bar.classList.add('visible');
+      setTimeout(() => bar.classList.remove('visible'), 7000);
+    }
+    setInterval(showHint, 2 * 60 * 1000); // every 2 minutes
   }
 
   // ===== CURSOR GLOW =====
